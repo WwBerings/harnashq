@@ -56,8 +56,8 @@ export async function hero(canvas) {
     camera.aspect = w / h;
     // Op smalle schermen het logo kleiner en hoger, zodat de kop eronder past.
     const narrow = w / h < 0.9;
-    camera.position.z = narrow ? 13 : 9;
-    logo.position.set(narrow ? 0 : 1.9, narrow ? 1.5 : 0.1, 0);
+    camera.position.z = narrow ? 15.5 : 9;
+    logo.position.set(narrow ? 0 : 1.9, narrow ? 1.9 : 0.1, 0);
     camera.updateProjectionMatrix();
   }
   resize(); addEventListener('resize', resize);

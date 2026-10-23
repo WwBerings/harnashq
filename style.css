@@ -115,7 +115,7 @@ main { position: relative; z-index: 1; background: var(--paper); }
 .note { margin-top: 18px; font-size: var(--step-small); color: var(--muted); }
 .vault { position: relative; }
 .vault-box { position: relative; aspect-ratio: 1; background: var(--night); color: var(--white); overflow: hidden; }
-.vault-h { position: absolute; left: 24px; top: 20px; font-weight: 700; }
+.vault-h { position: absolute; right: 24px; bottom: 20px; font-weight: 700; }
 .sys { position: absolute; background: var(--night-3); color: var(--steel); padding: 10px 14px; font-size: var(--step-small); font-weight: 600; }
 .s-a { left: 12%; top: 26%; } .s-b { right: 12%; top: 46%; } .s-c { left: 22%; bottom: 16%; }
 .agent { position: absolute; left: 0; top: 0; width: 64px; padding: 12px; background: var(--blue); color: var(--white); }
