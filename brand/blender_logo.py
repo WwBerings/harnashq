@@ -329,7 +329,8 @@ SEQ_BASE = 160    # the motion is authored on a 160-frame timeline (frames 0-159
 SEQ_N = next((int(a[1:]) for a in argv if re.fullmatch(r'n\d+', a)), SEQ_BASE)   # e.g. -- sequence 96 n320
 SEQ_DIR = os.path.join(TEAM, 'seq' if SEQ_N == SEQ_BASE else f'seq{SEQ_N}')
 SEQ_TMP = f'/tmp/harnas-seq{SEQ_N}'
-SOFT_DIM = 0.55   # softbox + lames strip drop to 45% while the plates are apart: the tilted right chest plate faces them
+SOFT_DIM = 0.65   # the fill light drops to 35% while the plates are apart: the tilted right chest plate mirrors it
+                  # (found by switching lights off one at a time; softbox and lames strip were not the cause)
 # Per plate, in build space (x right, y up, z towards the viewer): offset at full separation and
 # extra rotation in degrees. Chest plates go up and out, lames step down and forward.
 EXPLODE = {
@@ -377,7 +378,7 @@ if MODE == 'sequence':
     cam.location = (d2 * math.sin(yaw) * math.cos(pitch), -d2 * math.cos(yaw) * math.cos(pitch), d2 * math.sin(pitch))
     cd.dof.aperture_fstop = 11.0
     scn.frame_start, scn.frame_end = 0, SEQ_N - 1
-    dim_lights = [(bpy.data.objects[n], bpy.data.objects[n].data.energy) for n in ('softbox', 'lames')]
+    dim_lights = [(bpy.data.objects[n], bpy.data.objects[n].data.energy) for n in ('fill',)]
     for fn in range(SEQ_N):
         f = fn * (SEQ_BASE - 1) / (SEQ_N - 1)          # resample the 160-frame timeline
         root.rotation_euler = (math.radians(90), 0, math.radians(seq_yaw(f)))
@@ -399,8 +400,10 @@ if MODE == 'sequence':
     conv = (
         "from PIL import Image, ImageDraw;import sys,os\n"
         "src,dst,a,b=sys.argv[1],sys.argv[2],int(sys.argv[3]),int(sys.argv[4])\n"
-        "for f in range(a,b+1):\n"
-        "    Image.open(f'{src}/f{f:03d}.png').save(f'{dst}/f{f:03d}.webp','WEBP',quality=80,alpha_quality=60,method=6)\n"
+        "from concurrent.futures import ProcessPoolExecutor\n"
+        "def w(f): Image.open(f'{src}/f{f:03d}.png').save(f'{dst}/f{f:03d}.webp','WEBP',quality=80,alpha_quality=60,method=6)\n"
+        "if __name__=='__main__':\n"
+        "    with ProcessPoolExecutor(mp_context=__import__('multiprocessing').get_context('fork')) as ex: list(ex.map(w, range(a,b+1)))\n"
         "fr=[f for f in range(0,int(sys.argv[5]),int(sys.argv[5])//20) if os.path.exists(f'{src}/f{f:03d}.png')]\n"
         "T=300;sheet=Image.new('RGB',(T*5,T*((len(fr)+4)//5)),(7,8,11));d=ImageDraw.Draw(sheet)\n"
         "for i,f in enumerate(fr):\n"

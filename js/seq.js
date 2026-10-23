@@ -67,7 +67,7 @@ export function sequence(canvas, { still = false } = {}) {
     const dt = Math.min(50, now - tPrev); tPrev = now;
     if (idle) {
       const k = ((now - t0) / 6000) % 2;                 // before the first scroll: a slow turn, back and forth
-      target = (k < 1 ? k : 2 - k) * 39;
+      target = (k < 1 ? k : 2 - k) * Math.round(N / 4 - 1);   // the first quarter is the slow turn
     } else target = progress() * (N - 1);
     // frame-rate independent easing toward the target
     const ease = 1 - Math.pow(1 - SMOOTH, dt / 16.67);
