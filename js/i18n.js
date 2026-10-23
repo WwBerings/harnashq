@@ -94,7 +94,8 @@ export const STRINGS = {
   fFail: ['That did not work. Email us at info@harnashq.com.', 'Dat lukte niet. Mail ons op info@harnashq.com.'],
   print: ['Save as PDF', 'Bewaar als pdf'],
 
-  posH: ['You know AI can help. You don\u2019t need to know how.', 'Je weet dat AI kan helpen. Hoe, hoef je niet te weten.'],
+  posH: ['You know AI can help.', 'Je weet dat AI kan helpen.'],
+  posH2: ['You don\u2019t need to know how.', 'Hoe, hoef je niet te weten.'],
   posP: ['That part is our job. Six things founders tell us, and what is possible today, inside the tools they already have.',
     'Dat deel is ons werk. Zes dingen die oprichters ons vertellen, en wat er vandaag kan, in de systemen die ze al hebben.'],
   posNow: ['What is possible', 'Wat er kan'],
