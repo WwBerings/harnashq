@@ -79,20 +79,38 @@ export function inzet(a) {
   return { urenPerWeek: Math.round(urenPerWeek), urenPerJaar, deel, urenDeel };
 }
 
-export const DREMPEL = { score: 60 };
-export function route(a) { return score(a) >= DREMPEL.score ? 'gesprek' : 'zelf'; }
-
+// The verdict is words, checked top-down. Hours and "usual way" decide it; the score is only logged.
 export const BANDS = [
-  { id: 'zeersterk', min: 80, naam: t('Very strong', 'Zeer sterk'),
-    oordeel: t('On every point we asked about, this job fits automation well.', 'Op elk punt dat we vroegen past deze klus goed bij automatisering.') },
-  { id: 'sterk', min: 60, naam: t('Strong', 'Sterk'),
-    oordeel: t('A good fit for an agent, with a person checking the exceptions.', 'Past goed bij een agent, met een mens die de uitzonderingen controleert.') },
-  { id: 'deels', min: 40, naam: t('Partly', 'Deels'),
-    oordeel: t('Part of it fits. The usual cases are the place to start.', 'Een deel past. De standaardgevallen zijn de plek om te beginnen.') },
-  { id: 'laag', min: 0, naam: t('Low', 'Laag'),
-    oordeel: t('Too small or too irregular to build for now. The steps below are a better start than software.', 'Te klein of te onregelmatig om nu voor te bouwen. De stappen hieronder zijn een betere start dan software.') },
+  { id: 'teklein', naam: t('Too small to build for', 'Te klein om voor te bouwen'),
+    zin: t('Too few hours to build for. Check what your current software can already do.', 'Te weinig uren om voor te bouwen. Kijk wat je huidige software al kan.'), audit: false },
+  { id: 'ordenen', naam: t('Tidy up first', 'Eerst ordenen'),
+    zin: t('This job is different almost every time. Write down the steps first, then try the scan again.', 'Deze klus gaat bijna elke keer anders. Schrijf eerst de stappen op en doe de scan daarna opnieuw.'), audit: false },
+  { id: 'klaar', naam: t('Ready to hand over', 'Klaar om uit handen te geven'),
+    zin: t('This job is regular and big enough to hand over. An audit shows how.', 'Deze klus is regelmatig en groot genoeg om uit handen te geven. Een audit laat zien hoe.'), audit: true },
+  { id: 'bekijken', naam: t('Worth a closer look', 'Het onderzoeken waard'),
+    zin: t('Part of this job could go. An audit shows which part.', 'Een deel van deze klus kan eruit. Een audit laat zien welk deel.'), audit: true },
 ];
-export function band(s) { return BANDS.find((b) => s >= b.min); }
+const USUAL = { '9-10': 9.5, '6-8': 7, '3-5': 4, '0-2': 1, anders: null };
+export function band(a) {
+  const h = uren(a), u = USUAL[a.standaard];
+  if (a.uren === '<5' || (a.uren === 'anders' && urenUitTekst(a.urenTekst) !== null && h < 3)) return BANDS[0];
+  if (u !== null && u <= 2) return BANDS[1];
+  if (a.uren !== 'anders' && u !== null && h >= 10 && u >= 6) return BANDS[2];
+  return BANDS[3];
+}
+export function route(a) { return band(a).audit ? 'audit' : 'zelf'; }
+
+// What an audit checks first for this task: the one line that replaces the tips.
+export const AUDIT_EERST = {
+  mail: t('An audit checks first which mails come back every week, and which ones a person must keep answering.', 'Een audit kijkt eerst welke mails elke week terugkomen, en welke een mens moet blijven beantwoorden.'),
+  documenten: t('An audit checks first which documents every file must contain, and how often one is missing.', 'Een audit kijkt eerst welke stukken elk dossier moet bevatten, en hoe vaak er een ontbreekt.'),
+  facturen: t('An audit checks first where invoices and quotes come in, and how many need a correction by hand.', 'Een audit kijkt eerst waar facturen en offertes binnenkomen, en hoeveel er met de hand gecorrigeerd worden.'),
+  overtypen: t('An audit checks first which fields get copied, and whether the two programs can already talk to each other.', 'Een audit kijkt eerst welke velden worden overgetypt, en of de twee programma\'s al met elkaar kunnen praten.'),
+  planning: t('An audit checks first how requests come in and how often a slot is moved.', 'Een audit kijkt eerst hoe aanvragen binnenkomen en hoe vaak een afspraak verzet wordt.'),
+  klantvragen: t('An audit checks first which ten questions make up most of the volume, and where the answers already exist.', 'Een audit kijkt eerst welke tien vragen het meeste volume maken, en waar de antwoorden al staan.'),
+  rapportage: t('An audit checks first which numbers you really use, and where each one comes from.', 'Een audit kijkt eerst welke cijfers je echt gebruikt, en waar elk cijfer vandaan komt.'),
+  anders: t('An audit checks first how often the job happens and which steps are the same each time.', 'Een audit kijkt eerst hoe vaak de klus voorkomt en welke stappen elke keer hetzelfde zijn.'),
+};
 
 const VERIFIEER = {
   taak: t('Your own description of the job: the advice below is general, a conversation makes it specific.', 'Je eigen omschrijving van de klus: het advies hieronder is algemeen, een gesprek maakt het specifiek.'),
@@ -108,57 +126,6 @@ export const UITLEG = t(
   'Twee antwoorden scoren 0 tot 100 en je score is het gemiddelde: de uren per week die in de klus gaan, en hoe vaak het gaat zoals altijd. Onder de 5 uur per week, of als het 2 op de 10 keer of minder gaat zoals altijd, stopt de score bij 39. De uren per jaar zijn je eigen cijfers maal 46 werkweken; het deel dat bij automatisering past is een range, geen belofte.',
 );
 
-export const STAPPEN = {
-  mail: [
-    t('Count incoming mail by type for one week: question, document, invoice, other. Now you know the size.', 'Tel een week lang de binnenkomende mail per soort: vraag, stuk, factuur, overig. Dan weet je hoe groot het is.'),
-    t('Add rules that file mail by type. Outlook calls them Rules, Gmail calls them Filters.', 'Maak regels die mail per soort in een map zetten. In Outlook heet dat Regels, in Gmail Filters.'),
-    t('Write standard replies for your five most common questions. Let AI adapt them, never send them.', 'Schrijf standaardantwoorden voor je vijf meest gestelde vragen. Laat AI ze aanpassen, nooit zelf versturen.'),
-  ],
-  documenten: [
-    t('Agree one folder structure and one file name: date, client, document type.', 'Spreek één mapstructuur en één bestandsnaam af: datum, klant, soort stuk.'),
-    t('List the documents every type of file must contain.', 'Maak per soort dossier een lijst van stukken die er altijd in moeten zitten.'),
-    t('Let AI inside your own business account flag what is missing. A person asks for it.', 'Laat AI binnen je eigen zakelijke omgeving controleren wat ontbreekt. Een mens vraagt het op.'),
-  ],
-  facturen: [
-    t('Send all incoming invoices to one address linked to your accounting software. Most read invoices already.', 'Zet inkomende facturen op één mailadres gekoppeld aan je boekhoudpakket. Veel pakketten lezen ze al zelf in.'),
-    t('Build a quote template with fixed blocks, so you only fill in what changes.', 'Maak een offertesjabloon met vaste blokken, zodat je alleen invult wat verandert.'),
-    t('Check once a week at a fixed time instead of invoice by invoice.', 'Controleer één vast moment per week in plaats van per factuur.'),
-  ],
-  overtypen: [
-    t('Write down which fields you copy, from where to where. That list is the whole specification.', 'Schrijf op welke velden je overtypt, van waar naar waar. Die lijst is de hele specificatie.'),
-    t('Check whether both programs can export and import, or connect directly. Often they can and nobody switched it on.', 'Kijk of beide programma\'s kunnen exporteren en importeren, of direct koppelen. Vaak kan het en heeft niemand het aangezet.'),
-    t('Until then, copy in one batch at a fixed moment, not one by one through the day.', 'Neem het tot die tijd in één keer over op een vast moment, niet los door de dag heen.'),
-  ],
-  planning: [
-    t('Let clients pick a slot in the calendar you already have. Outlook and Google both offer a booking page.', 'Laat klanten zelf een tijd kiezen in je bestaande agenda. Outlook en Google hebben een boekingspagina.'),
-    t('Send an automatic reminder the day before.', 'Stuur automatisch een herinnering een dag van tevoren.'),
-    t('Decide who plans what, so there is one source of truth.', 'Leg vast wie wat plant, zodat er één bron van waarheid is.'),
-  ],
-  klantvragen: [
-    t('Put your ten most asked questions and answers on your site. It cuts the calls.', 'Zet je tien meest gestelde vragen met antwoord op je site. Dat scheelt telefoontjes.'),
-    t('Use a form with required fields so every question arrives complete.', 'Gebruik een formulier met verplichte velden, zodat elke vraag compleet binnenkomt.'),
-    t('Let AI draft a reply that a colleague checks before it goes out.', 'Laat AI een conceptantwoord maken dat een collega controleert voordat het de deur uitgaat.'),
-  ],
-  rapportage: [
-    t('Pick the five numbers that matter and where each one comes from.', 'Bepaal welke vijf cijfers ertoe doen en waar ze vandaan komen.'),
-    t('Pull those sources into one spreadsheet that updates itself.', 'Zet die bronnen in één spreadsheet die zichzelf bijwerkt.'),
-    t('Only let AI write the text once the numbers are right, and always read it.', 'Laat AI pas tekst schrijven als de cijfers kloppen, en lees hem altijd na.'),
-  ],
-  anders: [
-    t('Write down the steps of one case exactly as you did it last time. That list is where every automation starts.', 'Schrijf de stappen van één keer op, precies zoals je het de laatste keer deed. Met die lijst begint elke automatisering.'),
-    t('Mark each step: always the same, or does it depend? The "always the same" steps are the candidates.', 'Zet bij elke stap: altijd hetzelfde, of hangt het ervan af? De stappen die altijd hetzelfde zijn, zijn de kandidaten.'),
-    t('Count for two weeks how often it happens and how long it takes. Then the numbers in this scan are yours, not estimates.', 'Tel twee weken hoe vaak het gebeurt en hoe lang het duurt. Dan zijn de cijfers in deze scan van jou, geen schattingen.'),
-  ],
-};
-
-export const PRIVACY = [
-  t('No free or personal AI accounts for client data. Use a business plan that does not train on your data.', 'Geen gratis of persoonlijke AI-accounts voor klantgegevens. Kies een zakelijk abonnement dat niet traint op je data.'),
-  t('Know where the data lives and who can reach it. Write it down.', 'Weet waar de data staat en wie erbij kan. Leg dat vast.'),
-  t('Sign a data processing agreement with every party that handles personal data (GDPR art. 28).', 'Sluit een verwerkersovereenkomst met elke partij die persoonsgegevens verwerkt (AVG art. 28).'),
-  t('Never use AI output unchecked. A person signs off.', 'Neem AI-uitvoer nooit ongecontroleerd over. Een mens tekent af.'),
-  t('Tell clients that, and how, you use AI.', 'Vertel klanten dat en hoe je AI gebruikt.'),
-];
-
 const label = (id, v, lang) => vraag(id).a.find(([k]) => k === v)[1][lang];
 const fmt = (n, lang) => new Intl.NumberFormat(lang === 'nl' ? 'nl-NL' : 'en-GB').format(n);
 const FIELD = { taak: 'taakTekst', uren: 'urenTekst', standaard: 'standaardTekst' };
@@ -169,39 +136,25 @@ function antwoord(id, a, lang) {
 }
 
 export function report(a, lang = 'en') {
-  const s = score(a);
-  const b = band(s);
+  const b = band(a);
   const z = inzet(a);
   return {
-    score: s, band: b.id, bandNaam: b.naam[lang], oordeel: b.oordeel[lang], route: route(a),
+    score: score(a), band: b.id, bandNaam: b.naam[lang], oordeel: b.zin[lang], route: route(a),
     taak: antwoord('taak', a, lang), ...z, verifieer: teVerifieren(a, lang),
-    stappen: STAPPEN[a.taak].map((x) => x[lang]),
-    privacy: PRIVACY.map((x) => x[lang]),
+    eerst: AUDIT_EERST[a.taak][lang],
+    urenZin: lang === 'nl'
+      ? `Je zei ${a.uren === 'anders' ? 'ongeveer ' : ''}${z.urenPerWeek} uur per week: zo'n ${fmt(z.urenPerJaar, lang)} uur per jaar.`
+      : `You said ${a.uren === 'anders' ? 'about ' : ''}${z.urenPerWeek} hours a week: about ${fmt(z.urenPerJaar, lang)} hours a year.`,
+    auditVraag: lang === 'nl' ? `${antwoord('taak', a, lang)}, ongeveer ${z.urenPerWeek} uur per week` : `${antwoord('taak', a, lang)}, about ${z.urenPerWeek} hours a week`,
   };
 }
 
-const TEKST = {
-  en: { titel: 'HARNAS AI scan', uren: 'Hours', check: 'To verify', stappen: 'Three steps you can take this week', privacy: 'Before any AI touches this data', antwoorden: 'Your answers',
-    inzet: (r, l) => `About ${fmt(r.urenPerJaar, l)} hours a year go into this now (${r.urenPerWeek} a week, ${WERKWEKEN} working weeks). Between ${r.deel[0]}% and ${r.deel[1]}% of it goes the usual way: about ${fmt(r.urenDeel[0], l)} to ${fmt(r.urenDeel[1], l)} hours a year that fit automation. Not a promise.` },
-  nl: { titel: 'HARNAS AI-scan', uren: 'Uren', check: 'Te checken', stappen: 'Drie stappen voor deze week', privacy: 'Voordat AI aan deze gegevens komt', antwoorden: 'Je antwoorden',
-    inzet: (r, l) => `Ongeveer ${fmt(r.urenPerJaar, l)} uur per jaar gaat hier nu in (${r.urenPerWeek} per week, ${WERKWEKEN} werkweken). Tussen ${r.deel[0]}% en ${r.deel[1]}% daarvan gaat zoals altijd: ongeveer ${fmt(r.urenDeel[0], l)} tot ${fmt(r.urenDeel[1], l)} uur per jaar die bij automatisering passen. Geen belofte.` },
-};
-
-// The one-page report as plain text. The founder pastes it into a mail by hand.
+// The result as plain text, for the founder's mailbox.
 export function reportText(a, lang = 'en') {
   const r = report(a, lang);
-  const T = TEKST[lang];
-  const lines = [
-    `${T.titel}: ${r.taak}`,
-    `${r.score}/100, ${r.bandNaam}. ${r.oordeel}`,
-    '',
-    `${T.uren}: ${T.inzet(r, lang)}`,
-  ];
-  if (r.verifieer.length) lines.push('', `${T.check}:`, ...r.verifieer.map((x) => `- ${x}`));
-  lines.push('', `${T.stappen}:`, ...r.stappen.map((x, i) => `${i + 1}. ${x}`));
-  lines.push('', `${T.privacy}:`, ...r.privacy.map((x) => `- ${x}`));
-  lines.push('', `${T.antwoorden}:`, ...QUESTIONS.map(({ q, id }) => `${q[lang]} ${antwoord(id, a, lang)}`));
-  return lines.join('\n');
+  return [`${lang === 'nl' ? 'HARNAS AI-scan' : 'HARNAS AI scan'}: ${r.taak}`, `${r.bandNaam}. ${r.oordeel}`, r.urenZin, r.eerst,
+    ...(r.verifieer.length ? ['', ...r.verifieer] : []),
+    '', ...QUESTIONS.map(({ q, id }) => `${q[lang]} ${antwoord(id, a, lang)}`)].join('\n');
 }
 
 export function submissionText(a, { email = '', lang = 'en' } = {}) {
@@ -210,7 +163,7 @@ export function submissionText(a, { email = '', lang = 'en' } = {}) {
     `email: ${vrijeTekst(email)}`,
     `lang: ${lang}`,
     `score: ${r.score} (${r.band}), route: ${r.route}`,
-    `uren/jaar: ${r.urenPerJaar}, deel: ${r.deel[0]}-${r.deel[1]}%`,
+    `uren/jaar: ${r.urenPerJaar}`,
     '',
     ...QUESTIONS.map(({ id }) => `${id}: ${a[id]}${a[id] === 'anders' ? ' | ' + vrijeTekst(a[FIELD[id]]) : ''}`),
   ].join('\n');

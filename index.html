@@ -6,109 +6,81 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; connect-src https://formspree.io; form-action 'self' https://formspree.io mailto:; base-uri 'none'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>HARNAS · AI consultancy for small business</title>
-<meta name="description" content="We find what saves your business time or money, and build it. Privacy by design. Start with the free scan.">
+<meta name="description" content="We find what saves your business time or money, and build it. Privacy by design. Book the audit or take the free scan.">
 <link rel="icon" href="brand/harnas-mark.svg">
+<link rel="preload" as="image" href="img/seq/f000.webp">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="hero" id="top">
-  <video class="hero-video" autoplay muted loop playsinline poster="img/hero-poster.jpg" aria-hidden="true">
-    <source src="img/hero-loop.webm" type="video/webm">
-    <source src="img/hero-loop.mp4" type="video/mp4">
-  </video>
-  <nav class="bar wrap" aria-label="Main">
-    <a class="brand" href="#top" aria-label="HARNAS home"><svg viewBox="0 0 100 108" aria-hidden="true"><use href="#mark"/></svg><span>HARNAS</span></a>
-    <div class="nav-links">
-      <a class="link" href="#how" data-t="navHow">How we work</a>
-      <a class="link" href="#privacy" data-t="navPrivacy">Privacy</a>
-      <a class="link" href="#scan" data-t="navScan">AI scan</a>
-    </div>
-    <div class="langs" role="group" aria-label="Language">
-      <button type="button" data-lang="en" aria-pressed="true">EN</button>
-      <button type="button" data-lang="nl" aria-pressed="false">NL</button>
-    </div>
-    <a class="btn btn-light nav-cta" href="#scan" data-t="cta">Take the scan</a>
-  </nav>
-  <div class="hero-copy wrap">
+<canvas id="emblem" aria-hidden="true"></canvas>
+
+<nav class="bar wrap" aria-label="Main">
+  <a class="brand" href="#top" aria-label="HARNAS home"><svg viewBox="0 0 100 108" aria-hidden="true"><use href="#mark"/></svg><span>HARNAS</span></a>
+  <div class="nav-links">
+    <a class="link" href="#how" data-t="navHow">How we work</a>
+    <a class="link" href="#audit" data-t="navAudit">The audit</a>
+    <a class="link" href="#scan" data-t="navScan">Free scan</a>
+  </div>
+  <div class="langs" role="group" aria-label="Language">
+    <button type="button" data-lang="en" aria-pressed="true">EN</button>
+    <button type="button" data-lang="nl" aria-pressed="false">NL</button>
+  </div>
+  <a class="btn btn-light nav-cta" href="#audit" data-t="ctaAudit">Book the audit</a>
+</nav>
+
+<header class="screen hero" id="top">
+  <div class="copy">
     <h1 data-rise data-t="heroH">AI consultancy for small business.</h1>
-    <p class="hero-lead" data-rise style="--i:1" data-t="heroP">We find what saves your business time or money, and build it. Privacy by design.</p>
-    <div class="hero-actions" data-rise style="--i:2">
-      <a class="btn btn-blue" href="#scan" data-t="cta">Take the scan</a>
-      <a class="btn btn-ghost" href="#waitlist" data-t="waitlist">Join the waitlist</a>
+    <p class="lead" data-rise style="--i:1" data-t="heroP">We find what saves your business time or money, and build it. Privacy by design.</p>
+    <div class="actions-row" data-rise style="--i:2">
+      <a class="btn btn-blue" href="#audit" data-t="ctaAudit">Book the audit</a>
+      <a class="btn btn-ghost" href="#scan" data-t="ctaScan">Free scan</a>
     </div>
   </div>
 </header>
 
 <main>
 
-<section class="possible" id="possible" aria-labelledby="pos-h">
-  <div class="wrap split">
-    <div class="split-copy">
-      <h2 id="pos-h" data-reveal data-t="posH">You know AI can help.</h2>
-      <p class="lead-blue" data-reveal style="--i:1" data-t="posH2">You don’t need to know how.</p>
-      <ul class="pairs" data-reveal style="--i:2">
-        <li><span data-t="p1q">Monday: copying numbers</span><b data-t="p1a">Runs at night.</b></li>
-        <li><span data-t="p2q">The same five questions</span><b data-t="p2a">Drafted. You send.</b></li>
-        <li><span data-t="p3q">Chasing documents</span><b data-t="p3a">Asked for you.</b></li>
-        <li><span data-t="p4q">An evening per quote</span><b data-t="p4a">Twenty minutes.</b></li>
-        <li><span data-t="p5q">Month-end surprise</span><b data-t="p5a">Every Monday.</b></li>
-        <li><span data-t="p6q">Typing up voicemails</span><b data-t="p6a">In the file.</b></li>
-      </ul>
-      <div class="hero-actions" data-reveal style="--i:3"><a class="btn btn-blue" href="#scan" data-t="cta">Take the scan</a><a class="btn btn-ghost" href="#waitlist" data-t="waitlist">Join the waitlist</a></div>
-    </div>
-    <figure class="split-img" data-reveal style="--i:1"><img src="img/part-plates.webp" width="1200" height="1200" loading="lazy" alt="Steel chest plates of the HARNAS emblem, lit from the side"></figure>
-  </div>
-</section>
-
-<section class="how" id="how" aria-labelledby="how-h">
-  <div class="wrap split split-rev">
-    <figure class="split-img" data-reveal><img src="img/part-seam.webp" width="1200" height="1200" loading="lazy" alt="The blue seam between the two steel plates, up close"></figure>
-    <div class="split-copy">
-      <h2 id="how-h" data-reveal data-t="howH">How we work</h2>
-      <ol class="steps" data-reveal style="--i:1">
-        <li><b data-t="w1">Audit</b><span data-t="w1p">We look at how the work runs.</span></li>
-        <li><b data-t="w2">Proposal</b><span data-t="w2p">One fixed price, before we start.</span></li>
-        <li><b data-t="w3">Build</b><span data-t="w3p">Inside the tools you already have.</span></li>
-        <li><b data-t="w4">Maintain</b><span data-t="w4p">Optional, per month.</span></li>
-      </ol>
-    </div>
-  </div>
-</section>
-
-<section class="privacy" id="privacy" aria-labelledby="priv-h">
-  <div class="wrap">
-    <h2 id="priv-h" data-reveal data-t="privH">Privacy by design.</h2>
-    <p data-reveal style="--i:1" data-t="privP">Built to the rules that apply to your data.</p>
-    <ul class="marks" data-reveal style="--i:2" aria-label="Rules we build to">
-      <li><svg viewBox="0 0 100 108" aria-hidden="true"><use href="#mark"/></svg><span data-t="m1">GDPR</span></li>
-      <li><svg viewBox="0 0 100 108" aria-hidden="true"><use href="#mark"/></svg><span data-t="m2">EU AI Act</span></li>
-      <li><svg viewBox="0 0 100 108" aria-hidden="true"><use href="#mark"/></svg><span data-t="m3">NOvA guidance</span></li>
-      <li><svg viewBox="0 0 100 108" aria-hidden="true"><use href="#mark"/></svg><span data-t="m4">Rules of conduct</span></li>
+<section class="screen" id="possible" aria-labelledby="pos-h">
+  <div class="copy">
+    <h2 id="pos-h" data-reveal data-t="posH">You know AI can help.</h2>
+    <p class="lead-blue" data-reveal style="--i:1" data-t="posH2">You don’t need to know how.</p>
+    <ul class="pairs" data-reveal style="--i:2">
+      <li><span data-t="p1q">Monday: copying numbers</span><b data-t="p1a">Runs at night.</b></li>
+      <li><span data-t="p2q">The same five questions</span><b data-t="p2a">Drafted. You send.</b></li>
+      <li><span data-t="p3q">Chasing documents</span><b data-t="p3a">Asked for you.</b></li>
+      <li><span data-t="p4q">An evening per quote</span><b data-t="p4a">Twenty minutes.</b></li>
+      <li><span data-t="p5q">Month-end surprise</span><b data-t="p5a">Every Monday.</b></li>
+      <li><span data-t="p6q">Typing up voicemails</span><b data-t="p6a">In the file.</b></li>
     </ul>
   </div>
 </section>
 
-<section class="scan" id="scan" aria-labelledby="scan-h">
-  <div class="stage">
-    <div class="gauge" aria-hidden="true">
-      <svg viewBox="0 0 100 100"><circle class="g-bg" cx="50" cy="50" r="44"/><circle class="g-fg" id="gauge-arc" cx="50" cy="50" r="44"/></svg>
-      <p class="score-num"><span id="score-num"></span><small data-t="scoreOf">out of 100</small></p>
-    </div>
-    <p class="verdict" id="verdict"></p>
-    <div class="impact" id="impact" hidden>
-      <p><b id="hours-yr"></b><span data-t="hoursYr">hours a year go into this now</span></p>
-      <p><b id="fit-yr"></b><span data-t="fitYr">hours a year that fit automation</span></p>
-      <p class="basis" data-t="basis">Your own numbers. An indication, not a promise.</p>
-    </div>
+<section class="screen" id="how" aria-labelledby="how-h">
+  <div class="copy">
+    <h2 id="how-h" data-reveal data-t="howH">How we work</h2>
+    <ol class="steps" data-reveal style="--i:1">
+      <li><b data-t="w1">Audit</b><span data-t="w1p">Two weeks. One process. A two-page map.</span></li>
+      <li><b data-t="w2">Proposal</b><span data-t="w2p">One fixed price, before we start.</span></li>
+      <li><b data-t="w3">Build</b><span data-t="w3p">Inside the tools you already have.</span></li>
+      <li><b data-t="w4">Maintain</b><span data-t="w4p">Optional, per month.</span></li>
+    </ol>
+    <p class="privacy-line" data-reveal style="--i:2"><b data-t="privH">Privacy by design.</b> <span data-t="privP">Built to the rules that apply to your data.</span></p>
+    <ul class="marks" data-reveal style="--i:3" aria-label="Rules we build to">
+      <li data-t="m1">GDPR</li><li data-t="m2">EU AI Act</li><li data-t="m3">NOvA guidance</li><li data-t="m4">Rules of conduct</li>
+    </ul>
   </div>
-  <div class="panel">
-    <h2 id="scan-h" data-t="scanH">Where does AI pay off in your business?</h2>
+</section>
+
+<section class="screen" id="scan" aria-labelledby="scan-h">
+  <div class="copy panel">
+    <h2 id="scan-h" data-t="scanH">Free scan</h2>
     <p class="sub" data-t="scanP"></p>
     <div class="tabs" role="tablist" aria-label="Scan">
       <button role="tab" id="tab-q" aria-selected="true" aria-controls="pane-q" data-t="tabQ">Questions</button>
       <button role="tab" id="tab-r" aria-selected="false" aria-controls="pane-r" disabled data-t="tabR">Result</button>
-      <button role="tab" id="tab-f" aria-selected="false" aria-controls="pane-f" data-t="tabF">How we score</button>
+      <button role="tab" id="tab-f" aria-selected="false" aria-controls="pane-f" data-t="tabF">How we judge</button>
     </div>
     <div class="pane" id="pane-q" role="tabpanel" aria-labelledby="tab-q">
       <fieldset>
@@ -118,10 +90,15 @@
       <p class="rest" id="rest" aria-live="polite"></p>
     </div>
     <div class="pane" id="pane-r" role="tabpanel" aria-labelledby="tab-r" hidden>
-      <div class="verify" id="verify-wrap" hidden><h3 data-t="verify">To verify</h3><ul id="verify"></ul></div>
+      <p class="verdict" id="verdict"></p>
+      <p class="verdict-line" id="verdict-line"></p>
+      <p class="sub" id="hours-line"></p>
+      <p class="sub" id="first-line"></p>
+      <div class="verify" id="verify-wrap" hidden><ul id="verify"></ul></div>
+      <p class="sub yours" data-t="yours"></p>
     </div>
     <div class="pane" id="pane-f" role="tabpanel" aria-labelledby="tab-f" hidden>
-      <p class="sub" id="formula-text"></p>
+      <p class="sub" data-t="judge"></p>
     </div>
     <noscript><p class="sub">The scan runs in your browser and needs JavaScript. <a href="mailto:info@harnashq.com?subject=AI%20scan">info@harnashq.com</a></p></noscript>
     <div class="actions">
@@ -131,43 +108,31 @@
   </div>
 </section>
 
-<section class="report wrap" id="report" hidden aria-labelledby="rep-steps-h">
-  <h3 id="rep-steps-h" data-t="repSteps">What you can do yourself</h3>
-  <ol class="todo" id="rep-steps"></ol>
-  <h3 data-t="repPriv">Before any AI touches this data</h3>
-  <ul class="todo" id="rep-check"></ul>
-  <p class="rep-print"><button class="btn btn-dark" id="btn-print" type="button" data-t="print">Save as PDF</button></p>
-</section>
-
-<section class="waitlist" id="waitlist" aria-labelledby="wl-h">
-  <div class="wrap wl-grid">
-    <div>
-      <h2 id="wl-h" data-reveal data-t="wlH">Join the waitlist</h2>
-      <p data-reveal style="--i:1" data-t="wlP"></p>
-      <p class="wl-scan" id="wl-scan" hidden data-t="wlScan"></p>
-    </div>
-    <form class="wl-form" id="wl-form" method="post" action="https://formspree.io/f/xvkkonpn" data-reveal style="--i:2">
+<section class="screen" id="audit" aria-labelledby="audit-h">
+  <div class="copy">
+    <h2 id="audit-h" data-reveal data-t="auditH">The audit</h2>
+    <p data-reveal style="--i:1" data-t="auditP"></p>
+    <p class="keep" data-reveal style="--i:2" data-t="auditKeep">Even if you never build, you keep the map.</p>
+    <form class="form" id="audit-form" method="post" action="https://formspree.io/f/xvkkonpn" data-reveal style="--i:3">
       <label><span data-t="fEmail">Your email</span><input type="email" name="email" required autocomplete="email"></label>
-      <label><span data-t="fQ">What work would you hand off tomorrow if you could?</span><textarea name="work" rows="3" required maxlength="600"></textarea></label>
-      <input type="hidden" name="_subject" value="HARNAS waitlist">
-      <input type="hidden" name="score" id="f-score">
+      <label><span data-t="fQ">Which job should we look at, and roughly how many hours a week go into it?</span><input type="text" name="job" id="f-job" required maxlength="200"></label>
+      <input type="hidden" name="_subject" value="HARNAS audit">
       <input type="hidden" name="language" id="f-lang">
       <textarea name="scan" id="f-answers" hidden></textarea>
       <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="sr-only" aria-hidden="true">
-      <button class="btn btn-blue" type="submit" data-t="fSend">Join the waitlist</button>
-      <p class="form-msg" id="form-msg" aria-live="polite"></p>
+      <button class="btn btn-blue" type="submit" data-t="fSend">Book the audit</button>
+      <p class="form-msg" id="form-msg" aria-live="polite" data-t="fNote"></p>
     </form>
   </div>
 </section>
 
 </main>
 
-<footer class="foot">
-  <img class="foot-emblem" src="img/emblem.webp" width="1600" height="1000" loading="lazy" alt="" aria-hidden="true">
-  <div class="foot-copy wrap">
-    <p class="foot-h" data-t="footH">Start with the scan.</p>
-    <div class="hero-actions"><a class="btn btn-blue" href="#scan" data-t="cta">Take the scan</a><a class="btn btn-ghost" href="#waitlist" data-t="waitlist">Join the waitlist</a></div>
-    <p class="legal"><a class="link" href="mailto:info@harnashq.com">info@harnashq.com</a> · <a class="link" href="privacy.html" data-t="privacyLink">Privacy statement</a> · <span data-t="legal">No cookies, no trackers</span> · © 2026 HARNAS</p>
+<footer class="screen foot">
+  <div class="copy">
+    <p class="foot-h" data-t="footH">Book the audit.</p>
+    <div class="actions-row"><a class="btn btn-blue" href="#audit" data-t="ctaAudit">Book the audit</a><a class="btn btn-ghost" href="#scan" data-t="ctaScan">Free scan</a></div>
+    <p class="legal"><a class="link" href="privacy.html" data-t="privacyLink">Privacy statement</a> · <span data-t="legal">No cookies, no trackers</span> · © 2026 HARNAS</p>
     <p class="foot-sign"><svg viewBox="0 0 100 108" aria-hidden="true"><use href="#mark"/></svg>HARNAS</p>
   </div>
 </footer>

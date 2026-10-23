@@ -6,6 +6,8 @@
 #         -> team/hero-loop.webm, team/hero-loop.mp4, team/hero-poster.png (frames in /tmp/harnas-loop)
 # Parts:  Blender -b --python brand/blender_logo.py -- parts [samples=256] [scale%] [plates|seam|lames ...]
 #         -> team/part-<name>.png (transparent, 1200x1200) + .webp (q82, alpha)
+# Seq:    Blender -b --python brand/blender_logo.py -- sequence [samples=128] [scale%] [first last]
+#         -> team/seq/f000.webp .. f159.webp (q80, alpha) + team/seq/contact.jpg (every 8th frame)
 # All modes save brand/harnas.blend. (Blender = /Applications/Blender.app/Contents/MacOS/Blender)
 #
 # Geometry is read straight from brand/harnas-mark.svg. The paths are simple M/L/Q/Z polygons, so the
@@ -22,10 +24,10 @@ BLEND = os.path.join(HERE, 'harnas.blend')
 FRAMES = '/tmp/harnas-loop'
 
 argv = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
-MODE = argv[0] if argv and argv[0] in ('still', 'loop', 'parts') else 'still'
+MODE = argv[0] if argv and argv[0] in ('still', 'loop', 'parts', 'sequence') else 'still'
 ONLY = [a for a in argv[1:] if a.isalpha()]   # parts mode: optional shot names, e.g. -- parts 64 seam
 num = [a for a in argv if a.isdigit()]
-SAMPLES = int(num[0]) if num else {'still': 384, 'loop': 128, 'parts': 256}[MODE]
+SAMPLES = int(num[0]) if num else {'still': 384, 'loop': 128, 'parts': 256, 'sequence': 128}[MODE]
 PCT = int(num[1]) if len(num) > 1 else 100
 
 FPS, SECONDS = 30, 8
@@ -322,7 +324,87 @@ SHOTS = {
     'lames':  ((0.05, 0.0, -0.52), 18, -10, 2.9, 85, 8.0, -1.0),
 }
 
-if MODE == 'parts':
+# Scroll sequence: 160 frames, fixed camera, emblem turns, comes apart, reassembles plate by plate.
+SEQ_N = 160
+SEQ_DIR = os.path.join(TEAM, 'seq')
+SEQ_TMP = '/tmp/harnas-seq'
+# Per plate, in build space (x right, y up, z towards the viewer): offset at full separation and
+# extra rotation in degrees. Chest plates go up and out, lames step down and forward.
+EXPLODE = {
+    'l':  ((-0.36, 0.42, 0.18), (4, -6, 4)),
+    'r':  ((0.36, 0.42, 0.18), (4, 6, -4)),
+    'b1': ((0.0, 0.0, 0.30), (-5, 0, 3)),
+    'b2': ((0.0, -0.36, 0.16), (-6, 4, -3)),
+    'b3': ((0.0, -0.72, 0.04), (-7, -4, 3)),
+}
+RETURN_ORDER = ('l', 'r', 'b1', 'b2', 'b3')
+
+
+def smooth(t):
+    t = min(max(t, 0.0), 1.0)
+    return t * t * t * (t * (6 * t - 15) + 10)       # smootherstep: zero velocity and accel at ends
+
+
+def seq_amount(pid, f):
+    if f < 40:
+        return 0.0
+    if f < 80:
+        return smooth((f - 40) / 39)
+    k = RETURN_ORDER.index(pid)
+    return 1.0 - smooth((f - (80 + 6 * k)) / 15)     # windows 80-95, 86-101, ... 104-119
+
+
+# Yaw of the emblem (deg) at key frames; 22 deg turns the seam square to the camera.
+YAW_KEYS = [(0, 0.0), (39, 10.0), (79, 12.0), (119, 14.0), (138, 22.0), (159, 0.0)]
+
+
+def seq_yaw(f):
+    for (f0, y0), (f1, y1) in zip(YAW_KEYS, YAW_KEYS[1:]):
+        if f <= f1:
+            return y0 + (y1 - y0) * smooth((f - f0) / (f1 - f0))
+    return YAW_KEYS[-1][1]
+
+
+if MODE == 'sequence':
+    first, last = (int(num[2]), int(num[3])) if len(num) > 3 else (0, SEQ_N - 1)
+    r.resolution_x = r.resolution_y = 1200
+    root.animation_data_clear(); softbox.animation_data_clear()
+    softbox.location = ring(SOFT_AZ)
+    # Fixed camera: hero direction, pulled back so the exploded state fits with margin.
+    d2 = 10.0
+    cam.location = (d2 * math.sin(yaw) * math.cos(pitch), -d2 * math.cos(yaw) * math.cos(pitch), d2 * math.sin(pitch))
+    cd.dof.aperture_fstop = 11.0
+    scn.frame_start, scn.frame_end = 0, SEQ_N - 1
+    for f in range(SEQ_N):
+        root.rotation_euler = (math.radians(90), 0, math.radians(seq_yaw(f)))
+        root.keyframe_insert('rotation_euler', frame=f)
+        for pid, (off, rot) in EXPLODE.items():
+            a, o = seq_amount(pid, f), plates[pid]
+            o.delta_location = tuple(a * v for v in off)
+            o.delta_rotation_euler = tuple(a * math.radians(v) for v in rot)
+            o.keyframe_insert('delta_location', frame=f); o.keyframe_insert('delta_rotation_euler', frame=f)
+    os.makedirs(SEQ_TMP, exist_ok=True); os.makedirs(SEQ_DIR, exist_ok=True)
+    scn.frame_start, scn.frame_end = first, last
+    r.filepath = os.path.join(SEQ_TMP, 'f###')
+    t0 = time.time()
+    bpy.ops.render.render(animation=True)
+    print(f'RENDER_SECONDS {time.time() - t0:.0f}')
+    conv = (
+        "from PIL import Image, ImageDraw;import sys,os\n"
+        "src,dst,a,b=sys.argv[1],sys.argv[2],int(sys.argv[3]),int(sys.argv[4])\n"
+        "for f in range(a,b+1):\n"
+        "    Image.open(f'{src}/f{f:03d}.png').save(f'{dst}/f{f:03d}.webp','WEBP',quality=80,alpha_quality=60,method=6)\n"
+        "fr=[f for f in range(0,160,8) if os.path.exists(f'{src}/f{f:03d}.png')]\n"
+        "T=300;sheet=Image.new('RGB',(T*5,T*((len(fr)+4)//5)),(7,8,11));d=ImageDraw.Draw(sheet)\n"
+        "for i,f in enumerate(fr):\n"
+        "    im=Image.open(f'{src}/f{f:03d}.png').convert('RGBA').resize((T,T),Image.LANCZOS)\n"
+        "    x,y=(i%5)*T,(i//5)*T;sheet.paste(im,(x,y),im);d.text((x+8,y+6),f'f{f:03d}',fill=(150,155,170))\n"
+        "sheet.save(f'{dst}/contact.jpg',quality=88)\n"
+    )
+    subprocess.run(['python3', '-c', conv, SEQ_TMP, SEQ_DIR, str(first), str(last)], check=True)
+    tot = sum(os.path.getsize(os.path.join(SEQ_DIR, n)) for n in os.listdir(SEQ_DIR) if n.endswith('.webp'))
+    print(f'SEQ_TOTAL_KB {tot // 1024}')
+elif MODE == 'parts':
     r.resolution_x = r.resolution_y = 1200
     root.animation_data_clear(); softbox.animation_data_clear()
     root.rotation_euler = (math.radians(90), 0, 0)

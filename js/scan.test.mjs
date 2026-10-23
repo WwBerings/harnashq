@@ -1,21 +1,22 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { QUESTIONS, FORMULA, STAPPEN, PRIVACY, BANDS, score, route, report, reportText, submissionText, complete, uren, urenUitTekst } from './scan.js';
+import { QUESTIONS, FORMULA, BANDS, AUDIT_EERST, band, score, route, report, reportText, submissionText, complete, uren, urenUitTekst } from './scan.js';
 
 const p = (o) => ({ taak: 'mail', uren: '5-15', standaard: '6-8', ...o });
 
 const CASES = [
-  ['law firm, documents, 15-40h, usual 9-10', p({ taak: 'documenten', uren: '15-40', standaard: '9-10' }), [80, 100], 'gesprek'],
-  ['installer, scheduling, 40+, usual 6-8', p({ taak: 'planning', uren: '40+', standaard: '6-8' }), [80, 100], 'gesprek'],
-  ['webshop, questions, 5-15, usual 6-8', p({ taak: 'klantvragen' }), [40, 79], 'zelf'],
-  ['one-person, under 5 hours', p({ uren: '<5', standaard: '9-10' }), [0, 39], 'zelf'],
-  ['bespoke work, 15-40 but 0-2 usual', p({ uren: '15-40', standaard: '0-2' }), [0, 39], 'zelf'],
-  ['free text everywhere', p({ taak: 'anders', taakTekst: 'checking timesheets', uren: 'anders', urenTekst: 'about 20 hours', standaard: 'anders', standaardTekst: 'mostly' }), [40, 79], 'zelf'],
+  ['law firm, documents, 15-40h, usual 9-10', p({ taak: 'documenten', uren: '15-40', standaard: '9-10' }), 'klaar', 'audit'],
+  ['installer, scheduling, 40+, usual 6-8', p({ taak: 'planning', uren: '40+', standaard: '6-8' }), 'klaar', 'audit'],
+  ['webshop, questions, 5-15, usual 6-8', p({ taak: 'klantvragen' }), 'klaar', 'audit'],
+  ['5-15 hours but usual 3-5', p({ standaard: '3-5' }), 'bekijken', 'audit'],
+  ['one-person, under 5 hours', p({ uren: '<5', standaard: '9-10' }), 'teklein', 'zelf'],
+  ['bespoke work, 15-40 but 0-2 usual', p({ uren: '15-40', standaard: '0-2' }), 'ordenen', 'zelf'],
+  ['free text everywhere', p({ taak: 'anders', taakTekst: 'checking timesheets', uren: 'anders', urenTekst: 'about 20 hours', standaard: 'anders', standaardTekst: 'mostly' }), 'bekijken', 'audit'],
 ];
-for (const [name, a, [lo, hi], r] of CASES) test(name, () => {
-  const s = score(a);
-  assert.ok(s >= lo && s <= hi, `score ${s} not in ${lo}-${hi}`);
+for (const [name, a, b, r] of CASES) test(name, () => {
+  assert.equal(band(a).id, b);
   assert.equal(route(a), r);
+  const s = score(a); assert.ok(s >= 0 && s <= 100);
 });
 
 test('weights sum to 1 and every option has points', () => {
@@ -46,10 +47,12 @@ test('hours read from free text, else the middle value', () => {
   assert.equal(uren(p({ uren: 'anders', urenTekst: '12,5 uur' })), 12.5);
 });
 
-test('every task has three steps and the report has them', () => {
-  for (const [v] of QUESTIONS[0].a) assert.equal(STAPPEN[v].length, 3, v);
-  assert.equal(report(p()).stappen.length, 3);
-  assert.equal(report(p()).privacy.length, PRIVACY.length);
+test('every task has an audit line and the report carries it', () => {
+  for (const [v] of QUESTIONS[0].a) assert.ok(AUDIT_EERST[v].en && AUDIT_EERST[v].nl, v);
+  const r = report(p());
+  assert.equal(r.eerst, AUDIT_EERST.mail.en);
+  assert.match(r.urenZin, /You said 10 hours a week/);
+  assert.match(r.auditVraag, /about 10 hours a week/);
 });
 
 test('free text is flagged to verify and shows in the report', () => {
@@ -60,12 +63,12 @@ test('free text is flagged to verify and shows in the report', () => {
 });
 
 test('verdicts never mention money, in both languages', () => {
-  for (const b of BANDS) for (const l of ['en', 'nl']) assert.doesNotMatch(b.oordeel[l], /€|euro|money|geld|sav/i);
+  for (const b of BANDS) for (const l of ['en', 'nl']) assert.doesNotMatch(b.zin[l], /€|euro|money|geld|sav/i);
   assert.doesNotMatch(reportText(p(), 'en'), /€|save/i);
   assert.doesNotMatch(reportText(p(), 'nl'), /€|bespaar/i);
 });
 
 test('every text exists in EN and NL', () => {
-  const all = [...QUESTIONS.flatMap(({ q, a }) => [q, ...a.map(([, l]) => l)]), ...Object.values(STAPPEN).flat(), ...PRIVACY];
+  const all = [...QUESTIONS.flatMap(({ q, a }) => [q, ...a.map(([, l]) => l)]), ...Object.values(AUDIT_EERST), ...BANDS.flatMap((b) => [b.naam, b.zin])];
   for (const x of all) for (const l of ['en', 'nl']) assert.ok(typeof x[l] === 'string' && x[l].trim());
 });
