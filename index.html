@@ -1,199 +1,204 @@
 <!doctype html>
-<html lang="nl">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HARNAS · AI-agents en automatisering voor het mkb</title>
-<meta name="description" content="Wij bouwen AI-agents die terugkerend handwerk overnemen, binnen de systemen die je al gebruikt. Privacy by design, volgens AVG en NOvA. Doe de gratis AI-scan.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%2314171C%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-family=%27Georgia,serif%27 font-size=%2720%27 fill=%27%23FBFCFD%27 text-anchor=%27middle%27%3EH%3C/text%3E%3C/svg%3E">
-<link rel="preload" as="image" href="img/borstplaat.jpg">
+<title>HARNAS · AI agents for the busywork</title>
+<meta name="description" content="We build AI agents that take over repetitive office work, inside the tools you already use. Privacy by design. Take the free AI scan.">
+<link rel="icon" href="brand/harnas-mark.svg">
 <link rel="stylesheet" href="style.css">
+<script type="importmap">{ "imports": { "three": "./vendor/three/three.module.min.js", "three/addons/": "./vendor/three/addons/" } }</script>
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
 
-<header class="board" id="top">
-  <div class="bar">
-    <div class="tile mark"><a href="#top" aria-label="H· HARNAS, naar boven">H·</a></div>
-    <nav class="tile links" aria-label="Hoofdmenu">
-      <a class="link" href="#werkwijze">Werkwijze</a>
-      <a class="link" href="#privacy">Privacy</a>
-      <a class="link" href="#vragen">Vragen</a>
-    </nav>
-    <a class="tile act" href="#scan">Doe de scan</a>
+<header class="hero" id="top">
+  <canvas id="hero-gl" aria-hidden="true"></canvas>
+  <img class="hero-still" src="img/hero.webp" width="1600" height="1000" alt="Steel HARNAS emblem lit in blue" aria-hidden="true">
+  <nav class="bar wrap" aria-label="Main">
+    <a class="brand" href="#top" aria-label="HARNAS home"><svg viewBox="0 0 100 108" aria-hidden="true"><use href="#mark"/></svg><span>HARNAS</span></a>
+    <div class="nav-links">
+      <a class="link" href="#how" data-t="navHow">How it works</a>
+      <a class="link" href="#privacy" data-t="navPrivacy">Privacy</a>
+      <a class="link" href="#scan" data-t="navScan">AI scan</a>
+    </div>
+    <div class="langs" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="nl" aria-pressed="false">NL</button>
+    </div>
+    <a class="btn btn-light nav-cta" href="#scan" data-t="cta">Take the scan</a>
+  </nav>
+  <div class="hero-copy wrap">
+    <h1 data-rise data-t="heroH">AI agents for the busywork.</h1>
+    <p data-rise style="--i:1" data-t="heroP">Built into the tools you already use. Your data stays home.</p>
+    <div class="hero-actions" data-rise style="--i:2">
+      <a class="btn btn-blue" href="#scan" data-t="cta">Take the scan</a>
+      <a class="btn btn-ghost" href="#demo" data-t="heroSee">See it work</a>
+    </div>
   </div>
-
-  <div class="tile name"><h1 data-rise style="--i:0">HAR·NAS</h1></div>
-  <figure class="tile photo shutter p1" data-reveal>
-    <img src="img/borstplaat.jpg" width="1020" height="1100" alt="Gegraveerde stalen borstplaat van een harnas, zestiende eeuw">
-  </figure>
-  <figure class="tile photo p2">
-    <img src="img/veldharnas.jpg" width="655" height="1100" alt="Driekwart veldharnas op een standaard, rond 1560">
-  </figure>
-  <div class="tile dark"><p data-rise style="--i:1">Wij bouwen AI-agents die het handwerk op kantoor overnemen.</p></div>
-  <div class="tile accent"><p data-rise style="--i:2">In de systemen die je al hebt. Je gegevens blijven waar ze zijn.</p></div>
 </header>
 
 <main>
 
-<section class="intro wrap" aria-label="Over HARNAS">
-  <p class="lead-line" data-reveal>Werk dat steeds hetzelfde gaat, kan een systeem doen: mail sorteren, stukken nalopen, facturen overtikken. Wij bouwen het, op maat en getest.</p>
-  <div class="cols">
-    <p data-reveal style="--i:0"><b>Voor wie.</b> Bedrijven met 2 tot 50 mensen die voelen dat er tijd weglekt, maar geen eigen IT-afdeling hebben om het op te lossen. Van advocatenkantoor tot installateur. Werk je met vertrouwelijke gegevens, dan is dat voor ons geen bezwaar maar het uitgangspunt.</p>
-    <p data-reveal style="--i:1"><b>Wat we bouwen.</b> Agents en automatiseringen die één taak overnemen: mail indelen, dossiers controleren, facturen verwerken, afspraken plannen, antwoorden op klantvragen voorbereiden. Waar het ertoe doet, tekent een mens af.</p>
-    <p data-reveal style="--i:2"><b>Waarom nu.</b> 13,8% van de Nederlandse microbedrijven gebruikt al AI, in de zakelijke dienstverlening 27,1%. Wie het overwoog en niet deed, noemt vooral gebrek aan ervaring (71,6%) en privacy (48,8%). Kosten noemt maar 20,3%. <a class="link-plain" href="https://www.cbs.nl/nl-nl/longread/rapportages/2026/gebruik-van-ai-technologie-door-nederlandse-microbedrijven/2-gebruik-ai-technologie">Bron: CBS</a>.</p>
-    <p data-reveal style="--i:3"><b>Hoe je begint.</b> Doe <a class="link-plain" href="#scan">de scan</a> hieronder. Tien vragen, vijf minuten, direct een uitslag en een rapport. Je antwoorden blijven in je browser tot jij ze zelf verstuurt.</p>
-  </div>
-</section>
-
-<section class="mosaic" aria-label="Samengesteld, niet uitgevonden">
-  <figure class="cell"><img src="img/ruiter.jpg" width="909" height="1100" loading="lazy" alt="Harnas voor ruiter en paard, Neurenberg, 1548"></figure>
-  <div class="cell blue"><p>Een harnas wordt samengesteld, niet uitgevonden.</p></div>
-  <figure class="cell"><img src="img/helm-goud.jpg" width="850" height="1100" loading="lazy" alt="Gesloten helm met vergulde versiering, rond 1550"></figure>
-  <div class="cell ink"><p>De smid maakte het passend voor één lichaam. Wij koppelen bestaande, beproefde onderdelen tot iets dat past bij één bedrijf.</p></div>
-</section>
-
-<section class="steps wrap" id="werkwijze" aria-labelledby="stap1">
-  <div class="stair">
-    <div class="stage s1" data-reveal><h2 id="stap1">Eerst de scan of een gesprek.</h2><p>Tien vragen online, of 45 minuten aan tafel. We vragen naar je week, niet naar je wensenlijst.</p></div>
-    <div class="stage s2" data-reveal><h3>Binnen 48 uur een kansenkaart.</h3><p>Eén pagina met drie taken die een systeem kan overnemen, en wat elk oplevert in je eigen uren.</p></div>
-    <div class="stage s3" data-reveal><h3>Je kiest er één, voor één prijs.</h3><p>Een vast bedrag voor het hele project, met een duidelijk eindpunt. Geen uurtje-factuurtje.</p></div>
-    <div class="stage s4" data-reveal><h3>Getest op je eigen historie.</h3><p>We laten de agent drie maanden van je eigen werk overdoen. Minder dan 95% juist? Dan vervalt de laatste termijn. Daarna houden we hem scherp, als je dat wilt.</p></div>
-  </div>
-</section>
-
-<section class="privacy" id="privacy" aria-labelledby="privacy-kop">
-  <div class="wrap">
-    <h2 id="privacy-kop" data-reveal>Je gegevens blijven waar ze zijn.</h2>
-    <div class="ledger">
-      <figure class="side" data-reveal>
-        <img src="img/armschild.jpg" width="698" height="1100" loading="lazy" alt="Stalen armbeschermer met goudinleg, achttiende eeuw">
-      </figure>
-      <div class="rows">
-        <p class="rows-lead">Privacy by design betekent bij ons: we bouwen alleen in wat je al hebt, en de regels hieronder zijn het bestek, niet de bijsluiter.</p>
-
-        <h3 class="group">Wat wij toezeggen</h3>
-        <ul>
-          <li><span>Opslag</span><span>Niets wordt buiten je eigen systemen bewaard</span></li>
-          <li><span>Systemen</span><span>We bouwen in je bestaande zakelijke accounts</span></li>
-          <li><span>AI-diensten</span><span>Alleen zakelijke diensten die niet trainen op je data</span></li>
-          <li><span>Controle</span><span>Een mens tekent af voordat iets naar een klant gaat</span></li>
-          <li><span>Vertrek</span><span>Alles staat in jouw omgeving; je kunt altijd stoppen</span></li>
-        </ul>
-
-        <h3 class="group">Wat de wet vraagt, voor iedereen</h3>
-        <ul>
-          <li><span>AVG art. 28</span><span>Jij bent verantwoordelijk, wij zijn verwerker, vastgelegd in een verwerkersovereenkomst</span><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj" aria-label="Bron: AVG op EUR-Lex">Bron&nbsp;→</a></li>
-          <li><span>AVG art. 32</span><span>Beveiliging die past bij het risico</span><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj" aria-label="Bron: AVG artikel 32 op EUR-Lex">Bron&nbsp;→</a></li>
-          <li><span>AI-verordening art. 4</span><span>Zorg dat je mensen weten hoe ze met AI werken</span><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj" aria-label="Bron: AI-verordening op EUR-Lex">Bron&nbsp;→</a></li>
-          <li><span>AI-verordening art. 50</span><span>Laat weten wanneer iemand met AI communiceert</span><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj" aria-label="Bron: AI-verordening artikel 50 op EUR-Lex">Bron&nbsp;→</a></li>
-        </ul>
-
-        <h3 class="group">Wat de advocatuur daar bovenop vraagt</h3>
-        <ul>
-          <li><span>NOvA, dec. 2025</span><span>Geen gratis tools, weet waar je data staat, neem uitvoer nooit ongecontroleerd over</span><a href="https://www.advocatenorde.nl/voor-advocaten/digitalisering-ai/aanbevelingen-ai-de-advocatuur" aria-label="Bron: NOvA-aanbevelingen AI">Bron&nbsp;→</a></li>
-          <li><span>Gedragsregel 3</span><span>Passende maatregelen bij de keuze voor dataverwerking en opslag</span><a href="https://www.advocatenorde.nl/voor-advocaten/wet-en-regelgeving/gedragsregels/gedragsregels-advocatuur/de-maatschappelijke-rol" aria-label="Bron: Gedragsregels advocatuur, regel 3">Bron&nbsp;→</a></li>
-          <li><span>Gedragsregel 4</span><span>Opnames van gesprekken vooraf melden, ook geautomatiseerde</span><a href="https://www.advocatenorde.nl/voor-advocaten/wet-en-regelgeving/gedragsregels/gedragsregels-advocatuur/de-maatschappelijke-rol" aria-label="Bron: Gedragsregels advocatuur, regel 4">Bron&nbsp;→</a></li>
-        </ul>
-        <p class="note">Een samenvatting om het gesprek te beginnen, geen juridisch advies. Lees altijd de bron.</p>
-      </div>
+<section class="demo wrap" id="demo" aria-labelledby="demo-h">
+  <h2 id="demo-h" data-reveal data-t="demoH">It reads. It sorts. You sign off.</h2>
+  <div class="flow" data-ui aria-hidden="true">
+    <div class="col">
+      <p class="col-h" data-t="colIn">Inbox</p>
+      <ul class="items" id="inbox">
+        <li><span data-t="m1">Invoice 2291, March</span></li>
+        <li><span data-t="m2">Signed contract, new client</span></li>
+        <li><span data-t="m3">Can we move Thursday?</span></li>
+        <li><span data-t="m4">Copy of ID is missing</span></li>
+        <li><span data-t="m5">Quote request, 3 sites</span></li>
+      </ul>
+    </div>
+    <div class="core"><svg viewBox="0 0 100 108"><use href="#mark"/></svg></div>
+    <div class="col">
+      <p class="col-h" data-t="colOut">Sorted</p>
+      <ul class="items out" id="sorted">
+        <li><span data-t="m1">Invoice 2291, March</span><b data-t="m1t">Accounting</b></li>
+        <li><span data-t="m2">Signed contract, new client</span><b data-t="m2t">Filed</b></li>
+        <li><span data-t="m3">Can we move Thursday?</span><b data-t="m3t">Reply drafted</b></li>
+        <li class="you"><span data-t="m4">Copy of ID is missing</span><b data-t="m4t">Needs you</b></li>
+        <li><span data-t="m5">Quote request, 3 sites</span><b data-t="m5t">Quote drafted</b></li>
+      </ul>
     </div>
   </div>
 </section>
 
-<section class="scan" id="scan" aria-labelledby="scan-kop">
-  <div class="plate">
-    <figure class="square shutter" data-reveal>
-      <img src="img/helm.jpg" width="904" height="1100" loading="lazy" alt="Gesloten helm van gepolijst staal, Milaan, rond 1510">
-      <div class="proof" aria-hidden="true"><span class="ring"></span><span class="dot"></span><span class="num" id="proof-num"></span></div>
-    </figure>
+<section class="how" id="how" aria-labelledby="how-h">
+  <div class="wrap">
+    <h2 id="how-h" class="sr-only" data-t="howH">Four steps. One price.</h2>
+    <ol class="track">
+      <li><p class="word" data-t="s1">Scan</p><p data-t="s1p">10 questions or 45 minutes.</p></li>
+      <li><p class="word" data-t="s2">Map</p><p data-t="s2p">Three opportunities within 48 hours.</p></li>
+      <li><p class="word" data-t="s3">Build</p><p data-t="s3p">One task, one fixed price.</p></li>
+      <li class="last"><p class="word" data-t="s4">Prove</p><p data-t="s4p">Tested on 3 months of your own work. Under 95% right? The last invoice is on us.</p></li>
+    </ol>
+    <div class="fill" aria-hidden="true"><span id="fill"></span></div>
+  </div>
+</section>
+
+<section class="privacy wrap" id="privacy" aria-labelledby="priv-h">
+  <div class="priv-copy">
+    <h2 id="priv-h" data-reveal data-t="privH">Your data stays home.</h2>
+    <p data-reveal style="--i:1" data-t="privP">We only build in what you already use. Business accounts, no training on your data, a person signs off. The rules are the brief:</p>
+    <ul class="sources" data-reveal style="--i:2">
+      <li><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj" data-t="src1">GDPR art. 28 &amp; 32</a></li>
+      <li><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj" data-t="src2">EU AI Act art. 4 &amp; 50</a></li>
+      <li><a href="https://www.advocatenorde.nl/voor-advocaten/digitalisering-ai/aanbevelingen-ai-de-advocatuur" data-t="src3">Dutch Bar (NOvA) AI guidance</a></li>
+      <li><a href="https://www.advocatenorde.nl/voor-advocaten/wet-en-regelgeving/gedragsregels/gedragsregels-advocatuur/de-maatschappelijke-rol" data-t="src4">Dutch Bar rules of conduct 3 &amp; 4</a></li>
+    </ul>
+    <p class="note" data-t="privNote">A summary, not legal advice. Read the source.</p>
+  </div>
+  <div class="vault" data-ui aria-hidden="true">
+    <div class="vault-box">
+      <p class="vault-h" data-t="privBox">Your systems</p>
+      <span class="sys s-a">Microsoft 365</span>
+      <span class="sys s-b">Google</span>
+      <span class="sys s-c" data-t="privSw">Your software</span>
+      <span class="agent"><svg viewBox="0 0 100 108"><use href="#mark"/></svg></span>
+    </div>
+    <p class="vault-out" data-t="privOut">Nothing leaves</p>
+  </div>
+</section>
+
+<section class="scan" id="scan" aria-labelledby="scan-h">
+  <div class="stage">
+    <canvas id="level-gl" aria-hidden="true"></canvas>
+    <img class="level-still" src="img/level-0.webp" width="1200" height="1200" alt="Steel HARNAS emblem, unlit" aria-hidden="true">
+    <p class="score-num" id="score-num" aria-hidden="true"></p>
   </div>
   <div class="panel">
+    <h2 id="scan-h" data-t="scanH">How strong is your harness?</h2>
+    <p class="sub" data-t="scanP">10 questions. Your score lights the harness. Answers stay in your browser.</p>
+    <ul class="tiers" aria-label="Levels">
+      <li><img src="img/level-1.webp" width="600" height="600" loading="lazy" alt="Emblem smouldering blue"><b data-t="t1">Smoulder</b><span>0–49</span></li>
+      <li><img src="img/level-2.webp" width="600" height="600" loading="lazy" alt="Emblem burning"><b data-t="t2">Burn</b><span>50–79</span></li>
+      <li><img src="img/level-3.webp" width="600" height="600" loading="lazy" alt="Emblem white-hot"><b data-t="t3">White-hot</b><span>80–100</span></li>
+    </ul>
     <div class="tabs" role="tablist" aria-label="Scan">
-      <button role="tab" id="tab-vragen" aria-selected="true" aria-controls="pane-vragen">Vragen</button>
-      <button role="tab" id="tab-uitslag" aria-selected="false" aria-controls="pane-uitslag" disabled>Uitslag</button>
-      <button role="tab" id="tab-formule" aria-selected="false" aria-controls="pane-formule">Formule</button>
+      <button role="tab" id="tab-q" aria-selected="true" aria-controls="pane-q" data-t="tabQ">Questions</button>
+      <button role="tab" id="tab-r" aria-selected="false" aria-controls="pane-r" disabled data-t="tabR">Result</button>
+      <button role="tab" id="tab-f" aria-selected="false" aria-controls="pane-f" data-t="tabF">Formula</button>
     </div>
-
-    <div class="pane" id="pane-vragen" role="tabpanel" aria-labelledby="tab-vragen">
-      <h2 id="scan-kop">De gratis AI-scan</h2>
-      <p class="sub">Tien vragen. Je score wordt geslagen zoals een harnas werd beproefd: met een schot, en de deuk bleef zitten als bewijs.</p>
-      <form id="scan-form" novalidate>
-        <fieldset id="vraag">
-          <legend id="vraag-tekst">Je antwoorden blijven in deze browser.</legend>
-          <div class="opties" id="opties"></div>
-        </fieldset>
-        <p class="rest" id="rest" aria-live="polite"></p>
-      </form>
-      <noscript><p class="sub">De scan rekent in je browser en heeft JavaScript nodig. Liever mailen? <a href="mailto:hallo@harnashq.com?subject=AI-scan">hallo@harnashq.com</a></p></noscript>
+    <div class="pane" id="pane-q" role="tabpanel" aria-labelledby="tab-q">
+      <fieldset>
+        <legend id="q-text"></legend>
+        <div class="opts" id="opts"></div>
+      </fieldset>
+      <p class="rest" id="rest" aria-live="polite"></p>
     </div>
-
-    <div class="pane" id="pane-uitslag" role="tabpanel" aria-labelledby="tab-uitslag" hidden>
-      <h2 id="uitslag-kop">Kansscore</h2>
-      <p class="sub" id="uitslag-tekst"></p>
+    <div class="pane" id="pane-r" role="tabpanel" aria-labelledby="tab-r" hidden>
+      <p class="res-h" id="res-h"></p>
+      <p class="sub" id="res-p"></p>
     </div>
-
-    <div class="pane" id="pane-formule" role="tabpanel" aria-labelledby="tab-formule" hidden>
-      <h2>Zo rekenen we</h2>
-      <p class="sub">Elk antwoord krijgt 0 tot 100 punten. De score is het gewogen gemiddelde: uren per week 35%, voorspelbaarheid 25%, hoe vaak het terugkomt 20%, je systemen 10%, AI-gebruik nu 5% en tempo 5%. Sector, omvang en gevoeligheid tellen niet mee in de score; ze bepalen het advies. Bij 10 of meer mensen of 15 of meer uur per week, en een score van 50 of hoger, bieden we een gesprek aan.</p>
+    <div class="pane" id="pane-f" role="tabpanel" aria-labelledby="tab-f" hidden>
+      <p class="sub" data-t="formula"></p>
     </div>
-
+    <noscript><p class="sub">The scan runs in your browser and needs JavaScript. <a href="mailto:hallo@harnashq.com?subject=AI%20scan">hallo@harnashq.com</a></p></noscript>
     <div class="actions">
-      <button class="cell-btn tone" id="btn-terug" type="button">Vorige vraag</button>
-      <button class="cell-btn ink" id="btn-door" type="button">Begin de scan</button>
+      <button class="btn btn-ghost" id="btn-back" type="button" disabled data-t="back">Back</button>
+      <button class="btn btn-blue" id="btn-go" type="button" data-t="start">Start the scan</button>
     </div>
   </div>
 </section>
 
-<section class="report wrap" id="rapport" hidden aria-labelledby="rapport-kop">
-  <h2 id="rapport-kop">Je rapport</h2>
-  <div class="report-grid">
-    <div class="report-main">
-      <p class="report-lead" id="rapport-lead"></p>
-      <h3>Drie stappen die je zelf kunt zetten</h3>
-      <ol class="todo" id="rapport-stappen"></ol>
-      <div id="rapport-privacy" hidden>
-        <h3>Omdat je met gevoelige gegevens werkt</h3>
-        <ul class="todo" id="rapport-checklist"></ul>
+<section class="report wrap" id="report" hidden aria-labelledby="rep-h">
+  <h2 id="rep-h" data-t="repH">Your report</h2>
+  <div class="rep-grid">
+    <div>
+      <p class="rep-lead" id="rep-lead"></p>
+      <h3 data-t="repSteps">Three steps you can take yourself</h3>
+      <ol class="todo" id="rep-steps"></ol>
+      <div id="rep-priv" hidden>
+        <h3 data-t="repPriv">Because your data is sensitive</h3>
+        <ul class="todo" id="rep-check"></ul>
       </div>
     </div>
-    <div class="report-side">
-      <p class="big-num"><span id="rapport-uren"></span><small>uur per week, indicatie</small></p>
-      <p class="small muted">Gebaseerd op je eigen antwoorden en het deel van het werk dat zich laat automatiseren. Geen belofte, wel een richting.</p>
-      <div class="report-actions">
-        <a class="cell-btn ink" id="btn-mail" href="mailto:hallo@harnashq.com">Plan een gesprek</a>
-        <button class="cell-btn tone" id="btn-print" type="button">Bewaar als pdf</button>
+    <div class="rep-side">
+      <p class="big"><span id="rep-hours"></span><small data-t="repHours">hours a week, estimate</small></p>
+      <p class="small" data-t="repNote"></p>
+      <div class="rep-actions">
+        <a class="btn btn-blue" id="btn-mail" href="mailto:hallo@harnashq.com">Email us</a>
+        <button class="btn btn-dark" id="btn-print" type="button" data-t="print">Save as PDF</button>
       </div>
     </div>
   </div>
 </section>
 
-<section class="faq wrap" id="vragen" aria-labelledby="vragen-kop">
-  <div class="qa head-row"><h2 id="vragen-kop">Vragen</h2></div>
-  <div class="qa" data-reveal><h3>Wat kost het?</h3><p>Eén vast bedrag per project, dat je weet voordat we beginnen. We rekenen terug vanuit wat de taak je nu kost, niet vanuit onze uren. De scan en de kansenkaart zijn gratis.</p></div>
-  <div class="qa" data-reveal><h3>Gaan mijn gegevens naar ChatGPT?</h3><p>Niet naar een gratis of persoonlijk account, en nooit naar een dienst die op je data traint. We werken in je bestaande zakelijke systemen. Is er een AI-dienst nodig, dan kies je die samen met ons en staat hij in de verwerkersovereenkomst.</p></div>
-  <div class="qa" data-reveal><h3>Moeten we nieuwe software kopen?</h3><p>Meestal niet. We bouwen in Microsoft 365, Google Workspace of je branchepakket. Komt er toch iets bij, dan hoor je dat vooraf, met de kosten erbij.</p></div>
-  <div class="qa" data-reveal><h3>Wat als de agent een fout maakt?</h3><p>Daarom testen we op drie maanden van je eigen werk voordat hij live gaat, en tekent een mens af waar het ertoe doet. Na oplevering kijken we 30 dagen mee.</p></div>
-  <div class="qa" data-reveal><h3>Is dit alleen voor advocaten?</h3><p>Nee. In de advocatuur weegt vertrouwelijkheid het zwaarst, en wat daar volstaat, volstaat bijna overal. We werken voor elk bedrijf met terugkerend handwerk.</p></div>
-  <div class="qa" data-reveal><h3>Wie bouwt het?</h3><p>Mensen met jarenlange ervaring in het bouwen van agents en automatiseringen. We gebruiken bestaande, beproefde onderdelen en je praat met wie het bouwt.</p></div>
-  <div class="qa" data-reveal><h3>Wat gebeurt er met mijn scan?</h3><p>Niets, tenzij jij op versturen drukt. De scan rekent in je browser. Deze site gebruikt geen cookies en geen trackers.</p></div>
+<section class="faq wrap" id="faq" aria-labelledby="faq-h">
+  <h2 id="faq-h" data-t="faqH">Questions</h2>
+  <div class="qa" data-reveal><h3 data-t="q1">What does it cost?</h3><p data-t="a1"></p></div>
+  <div class="qa" data-reveal><h3 data-t="q2">Does my data go to ChatGPT?</h3><p data-t="a2"></p></div>
+  <div class="qa" data-reveal><h3 data-t="q3">What if it makes a mistake?</h3><p data-t="a3"></p></div>
+  <div class="qa" data-reveal><h3 data-t="q4">Only for law firms?</h3><p data-t="a4"></p></div>
 </section>
 
 </main>
 
 <footer class="foot">
   <div class="foot-cols wrap">
-    <div><p>Contact</p><p><a class="link" href="mailto:hallo@harnashq.com">hallo@harnashq.com</a></p></div>
-    <div><p>Op deze pagina</p><p><a class="link" href="#werkwijze">Werkwijze</a><br><a class="link" href="#privacy">Privacy</a><br><a class="link" href="#scan">De scan</a><br><a class="link" href="#vragen">Vragen</a></p></div>
-    <div><p>Bronnen</p><p><a class="link" href="https://www.cbs.nl/nl-nl/longread/rapportages/2026/gebruik-van-ai-technologie-door-nederlandse-microbedrijven/2-gebruik-ai-technologie">CBS, AI bij microbedrijven</a><br><a class="link" href="https://www.advocatenorde.nl/voor-advocaten/digitalisering-ai/aanbevelingen-ai-de-advocatuur">NOvA, aanbevelingen AI</a><br><a class="link" href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">AVG</a><br><a class="link" href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">AI-verordening</a></p></div>
-    <div><p>Beeld</p><p>Harnassen uit het Metropolitan Museum of Art en het Art Institute of Chicago, publiek domein (CC0). <a class="link" href="credits.html">Alle bronnen</a></p></div>
+    <div><p data-t="footContact">Contact</p><p><a class="link" href="mailto:hallo@harnashq.com">hallo@harnashq.com</a></p></div>
+    <div><p data-t="footSources">Sources</p><p><a class="link" href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">GDPR</a> · <a class="link" href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">AI Act</a> · <a class="link" href="https://www.advocatenorde.nl/voor-advocaten/digitalisering-ai/aanbevelingen-ai-de-advocatuur">NOvA</a></p></div>
   </div>
   <div class="foot-mark wrap">
-    <svg viewBox="0 0 1000 170" role="img" aria-label="HARNAS"><text x="0" y="148" textLength="1000" lengthAdjust="spacingAndGlyphs">HAR·NAS</text></svg>
-    <p class="legal">© 2026 HARNAS · <a class="link" href="privacy.html">Privacyverklaring</a> · Geen cookies, geen trackers</p>
+    <svg class="foot-word" viewBox="0 0 1000 150" role="img" aria-label="HARNAS"><text x="0" y="132" textLength="1000" lengthAdjust="spacingAndGlyphs">HARNAS</text></svg>
+    <p class="legal">© 2026 HARNAS · <a class="link" href="privacy.html" data-t="privacyLink">Privacy statement</a> · <span data-t="legal">No cookies, no trackers</span></p>
   </div>
 </footer>
 
-<script type="module" src="app.js"></script>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 108"><g fill="currentColor">
+    <path d="M48.5 25 L36 7 L11 12.5 Q22 23 19.5 34 L24.5 63 L48.5 71 Z"/>
+    <path d="M51.5 25 L64 7 L89 12.5 Q78 23 80.5 34 L75.5 63 L51.5 71 Z"/>
+    <path d="M25.5 68.5 L50 76.5 L74.5 68.5 L72.5 77 L50 85 L27.5 77 Z"/>
+    <path d="M29.5 82.5 L50 89.5 L70.5 82.5 L68.5 91 L50 98 L31.5 91 Z"/>
+    <path d="M34 96 L50 101.5 L66 96 L64 103 L50 108 L36 103 Z"/>
+  </g></symbol>
+</svg>
+
+<script type="module" src="js/app.js"></script>
 </body>
 </html>

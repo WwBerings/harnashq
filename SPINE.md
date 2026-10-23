@@ -17,17 +17,19 @@ gebrek aan ervaring 71,6%, privacy 48,8%, kosten 20,3%. 13,8% van de microbedrij
 Eén ding: de bezoeker doet de gratis AI-scan. Wie groot genoeg is, vraagt daarna een gesprek
 aan. Wie kleiner is, krijgt een rapport waarmee hij zelf verder kan.
 
-## De stelling
+## Beeld (herzien 2026-10-23)
 
-Een harnas wordt samengesteld, niet uitgevonden. De smid maakte het passend voor één lichaam en
-schoot erop voordat iemand het droeg; de deuk bleef zitten als bewijs. Wij koppelen bestaande
-systemen tot een agent die past bij één bedrijf, en testen hem op hun eigen historie voordat
-hij live gaat.
+Niets middeleeuws meer. Het harnas is alleen nog het logo: een strak borstharnas uit vijf delen
+(`brand/harnas-mark.svg`). Taal: Engels standaard, Nederlands via de schakelaar.
 
-## Het idee op de pagina
-
-Het keurmerk (de deuk van de proefschoten) wordt de uitslag van de scan: je score wordt als
-keurmerk op het harnas geslagen. De scan is ook het levende ding op de pagina.
+- **Hero:** realtime 3D (Three.js, lokaal gehost). Het stalen logo wordt uit vijf delen
+  samengesteld terwijl een stroom data erin wordt opgenomen.
+- **Scan:** na de laatste vraag ontsteekt het harnas. Score <50 smeult, 50-79 brandt, 80+ witheet,
+  met vlammen, vonken en een schokgolf. De drie niveaus staan vooraf als beelden bij de scan.
+- **Minder tekst:** de demo (inbox die zichzelf sorteert), de werkwijze (vier woorden en een balk
+  die meevult) en het privacyschema (een agent die binnen je systemen blijft) laten het zien.
+- Stills in `img/` worden gerenderd met `brand/render.html` in headless Chrome; ze tonen bij
+  reduced motion en zolang 3D laadt.
 
 ## Volgorde (claim en bewijs)
 
@@ -57,8 +59,6 @@ keurmerk op het harnas geslagen. De scan is ook het levende ding op de pagina.
 - Elke juridische claim linkt naar de primaire bron. Dit is onderzoek, geen juridisch advies.
 - Geen em-dashes. Geen hypewoorden (revolutionair, game-changer, supercharge, 10x).
 - Geen cookies, geen analytics, geen externe scripts of fonts.
-- Beelden: museumharnassen (CC0), altijd met bronvermelding. Nooit iets dat op een gevecht
-  of fantasy lijkt.
 
 ## Voor livegang nog nodig
 

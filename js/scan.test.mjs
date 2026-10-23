@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { QUESTIONS, FORMULA, score, route, report, besparing, complete, mailBody } from './scan.js';
+import { QUESTIONS, FORMULA, STAPPEN, PRIVACY, score, route, report, besparing, complete, mailBody } from './scan.js';
 
 const base = { sector: 'anders', mensen: '2-9', taak: 'mail', uren: '5-15', frequentie: 'wekelijks',
   voorspelbaar: 'uitzonderingen', systemen: 'm365', ai: 'nee', vertrouwelijk: 'laag', tempo: 'jaar' };
@@ -72,8 +72,17 @@ test('elke taak heeft drie stappen', () => {
   for (const [v] of QUESTIONS.find((q) => q.id === 'taak').a) assert.equal(report(p({ taak: v })).stappen.length, 3, v);
 });
 
-test('mailtekst bevat score en alle antwoorden', () => {
-  const body = mailBody(base);
-  assert.match(body, /Kansscore: \d+ van 100/);
-  assert.equal(body.split('\n').length, 3 + QUESTIONS.length);
+test('mailtekst bevat score en alle antwoorden, in beide talen', () => {
+  assert.match(mailBody(base, 'nl'), /Kansscore: \d+ van 100/);
+  assert.match(mailBody(base, 'en'), /Opportunity score: \d+ out of 100/);
+  for (const l of ['en', 'nl']) assert.equal(mailBody(base, l).split('\n').length, 3 + QUESTIONS.length);
+});
+
+test('elke scantekst bestaat in EN en NL en is niet leeg', () => {
+  const all = [...QUESTIONS.flatMap(({ q, a }) => [q, ...a.map(([, l]) => l)]), ...Object.values(STAPPEN).flat(), ...PRIVACY];
+  for (const x of all) for (const l of ['en', 'nl']) assert.ok(typeof x[l] === 'string' && x[l].trim(), JSON.stringify(x));
+});
+
+test('rapport komt in de gevraagde taal', () => {
+  assert.notEqual(report(base, 'en').stappen[0], report(base, 'nl').stappen[0]);
 });

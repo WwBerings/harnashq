@@ -1,0 +1,9 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script type="importmap">{ "imports": { "three": "../vendor/three/three.module.min.js", "three/addons/": "../vendor/three/addons/" } }</script>
+<style>html,body{margin:0;height:100%;background:#07080B}canvas{width:100vw;height:100vh;display:block}</style></head>
+<body><canvas id="c"></canvas>
+<script type="module">
+const q = new URLSearchParams(location.search);
+if (q.has('hero')) { const m = await import('../js/hero3d.js'); await m.hero(document.getElementById('c')); }
+else { const m = await import('../js/level.js'); const l = await m.level(document.getElementById('c')); const s = +q.get('score'); if (s) l.set(s, true); }
+</script></body></html>
