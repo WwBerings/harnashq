@@ -81,6 +81,7 @@ function countUp(el, to) {
 
 function finish() {
   i = QUESTIONS.length;
+  document.querySelector('.scan').dataset.done = '1';
   tabs.r.disabled = false; showTab('r');
   $('report').hidden = false;
   render();
@@ -122,7 +123,7 @@ back.addEventListener('click', () => {
   if (i === QUESTIONS.length) {
     for (const k in answers) delete answers[k];
     $('score-num').textContent = ''; $('gauge-arc').style.strokeDashoffset = '276.46'; $('verdict').textContent = ''; $('impact').hidden = true;
-    $('report').hidden = true; tabs.r.disabled = true;
+    $('report').hidden = true; tabs.r.disabled = true; delete document.querySelector('.scan').dataset.done;
     i = 0; showTab('q'); renderQuestion(true); return;
   }
   if (i > 0) { i--; showTab('q'); renderQuestion(true); }

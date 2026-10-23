@@ -67,14 +67,15 @@ p { text-wrap: pretty; max-width: 62ch; }
 /* ---------------- hero ---------------- */
 .hero { position: relative; z-index: 1; height: 100svh; min-height: 640px; background: var(--night); color: var(--white); overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
 .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 72% 50%; }
-.bar { position: relative; display: flex; align-items: center; gap: 2rem; padding-block: 18px; }
+.bar { position: relative; z-index: 1; display: flex; align-items: center; gap: 2rem; padding-block: 18px; }
 .brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; font-weight: 700; letter-spacing: 0.08em; font-size: var(--step-body); }
 .brand svg { width: 26px; color: var(--white); }
 .nav-links { display: flex; gap: 1.75rem; margin-left: auto; font-size: var(--step-small); }
 .langs { display: flex; font-size: var(--step-small); font-weight: 600; }
 .langs button { padding: 0.5rem 0.6rem; color: var(--steel-soft); transition: color var(--t-hover) ease; }
 .langs button[aria-pressed="true"] { color: var(--white); }
-.hero-copy { position: relative; padding-bottom: clamp(32px, 6vh, 72px); max-width: 60%; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0 0; height: 70%; background: linear-gradient(to top, rgba(7, 8, 11, 0.92) 30%, rgba(7, 8, 11, 0)); pointer-events: none; }
+.hero-copy { position: relative; z-index: 1; padding-bottom: clamp(32px, 6vh, 72px); max-width: 60%; }
 .hero h1 { font-size: var(--step-display); line-height: 0.98; letter-spacing: -0.045em; }
 .hero-lead { font-size: var(--step-display); line-height: 0.98; letter-spacing: -0.045em; font-weight: 700; color: var(--steel-soft); max-width: none; }
 .hero-copy p:not(.hero-lead) { margin-top: 1.25rem; font-size: var(--step-lead); line-height: 1.25; color: var(--steel); max-width: 30ch; }
@@ -113,6 +114,7 @@ main { position: relative; z-index: 1; background: var(--paper); }
 .g-bg { fill: none; stroke: var(--night-3); stroke-width: 5; }
 .g-fg { fill: none; stroke: var(--blue); stroke-width: 5; stroke-dasharray: 276.46; stroke-dashoffset: 276.46; transition: stroke-dashoffset 1400ms var(--ease-out); }
 .score-num { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; font-size: clamp(4rem, 12vh, 9rem); font-weight: 700; letter-spacing: -0.06em; line-height: 0.85; font-variant-numeric: tabular-nums; max-width: none; }
+.scan:not([data-done]) .score-num small { display: none; }
 .score-num small { display: block; font-size: var(--step-small); letter-spacing: 0; font-weight: 500; color: var(--steel-soft); margin-top: 14px; }
 .verdict { font-size: var(--step-lead); line-height: 1.2; letter-spacing: -0.02em; font-weight: 600; text-align: center; margin: 0 auto; max-width: 24ch; min-height: 1.2em; }
 .impact { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
@@ -190,7 +192,8 @@ legend { font-size: var(--step-lead); font-weight: 700; letter-spacing: -0.02em;
   .hero-video { object-position: 50% 28%; }
   .hero-copy { max-width: none; }
   .hero h1, .hero-lead { font-size: 9.5vw; }
-  .hero-copy p { font-size: var(--step-body); }
+  .hero-copy p:not(.hero-lead) { font-size: var(--step-body); }
+  .scan:not([data-done]) .stage { display: none; }
   .how, .privacy, .report { padding-block: 96px; }
   .steps { grid-template-columns: 1fr 1fr; margin-top: 40px; }
   .steps li { min-height: 0; padding: 20px; }
