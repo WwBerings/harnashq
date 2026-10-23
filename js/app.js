@@ -1,4 +1,4 @@
-import { QUESTIONS, complete, report, submissionText, UITLEG } from './scan.js';
+import { QUESTIONS, complete, report, reportText, submissionText, UITLEG } from './scan.js';
 import { getLang, saveLang, apply, tr } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
@@ -105,23 +105,25 @@ function render() {
   fill('rep-steps', r.stappen);
   $('rep-priv').hidden = r.privacy.length === 0; fill('rep-check', r.privacy);
   $('f-score').value = r.score; $('f-lang').value = lang;
-  $('f-answers').value = submissionText(answers, { lang });
+  $('f-answers').value = submissionText(answers, { lang }) + '\n\n---- report ----\n' + reportText(answers, lang);
+  $('wl-scan').hidden = false;
   back.disabled = false; back.textContent = tr('again', lang);
-  go.disabled = false; go.textContent = tr(call ? 'book' : 'read', lang);
+  go.disabled = false; go.textContent = tr(call ? 'waitlist' : 'read', lang);
+  go.dataset.target = call ? '#waitlist' : '#report';
 }
 
 function fill(id, items) { const el = $(id); el.innerHTML = ''; for (const t of items) { const li = document.createElement('li'); li.textContent = t; el.appendChild(li); } }
 
 go.addEventListener('click', () => {
   if (i === -1) { i = 0; showTab('q'); renderQuestion(true); return; }
-  if (i === QUESTIONS.length) { $('report').scrollIntoView({ behavior: still ? 'auto' : 'smooth' }); $('rep-form').querySelector('input[type=email]').focus({ preventScroll: true }); return; }
+  if (i === QUESTIONS.length) { document.querySelector(go.dataset.target).scrollIntoView({ behavior: still ? 'auto' : 'smooth' }); return; }
   next();
 });
 back.addEventListener('click', () => {
   if (i === QUESTIONS.length) {
     for (const k in answers) delete answers[k];
     $('score-num').textContent = ''; $('gauge-arc').style.strokeDashoffset = '276.46'; $('verdict').textContent = ''; $('impact').hidden = true;
-    $('report').hidden = true; tabs.r.disabled = true; delete document.querySelector('.scan').dataset.done;
+    $('report').hidden = true; $('wl-scan').hidden = true; $('f-answers').value = ''; $('f-score').value = ''; tabs.r.disabled = true; delete document.querySelector('.scan').dataset.done;
     i = 0; showTab('q'); renderQuestion(true); return;
   }
   if (i > 0) { i--; showTab('q'); renderQuestion(true); }
@@ -129,20 +131,20 @@ back.addEventListener('click', () => {
 $('btn-print').addEventListener('click', () => print());
 
 // ---------------- form: the submission goes to the HARNAS mailbox ----------------
-const form = $('rep-form');
+const form = $('wl-form');
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const msg = $('form-msg'); msg.textContent = '';
   const btn = form.querySelector('[type=submit]'); btn.disabled = true;
   if (form.action.includes('FORM_ID')) { // no form service yet: open a prefilled mail instead
-    const body = `${form.email.value}\n${form.company.value}\n\n${$('f-answers').value}`;
+    const body = `${form.email.value}\n${form.work.value}\n\n${$('f-answers').value}`;
     location.href = `mailto:info@harnashq.com?subject=${encodeURIComponent('AI scan ' + $('f-score').value)}&body=${encodeURIComponent(body)}`;
     btn.disabled = false; return;
   }
   try {
     const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
     if (!res.ok) throw new Error(String(res.status));
-    msg.textContent = tr('fSent', lang); form.querySelector('input[type=email]').value = '';
+    msg.textContent = tr('fSent', lang); form.email.value = ''; form.work.value = '';
   } catch { msg.textContent = tr('fFail', lang); }
   btn.disabled = false;
 });

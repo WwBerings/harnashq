@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; connect-src https://formspree.io; form-action 'self' https://formspree.io mailto:; base-uri 'none'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; connect-src https://formspree.io; form-action 'self' https://formspree.io mailto:; base-uri 'none'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>HARNAS · AI consultancy for small business</title>
 <meta name="description" content="We find the work in your business that AI can take over, and build it at one fixed price, inside the tools you already use. Start with the free scan.">
@@ -36,12 +36,31 @@
     <p class="hero-lead" data-rise style="--i:1" data-t="heroP">We find what saves your business time or money, and build it. Privacy by design.</p>
     <div class="hero-actions" data-rise style="--i:2">
       <a class="btn btn-blue" href="#scan" data-t="cta">Take the scan</a>
-      <a class="btn btn-ghost" href="#how" data-t="heroHow">How we work</a>
+      <a class="btn btn-ghost" href="#waitlist" data-t="waitlist">Join the waitlist</a>
     </div>
   </div>
 </header>
 
 <main>
+
+<section class="possible wrap" id="possible" aria-labelledby="pos-h">
+  <div class="pos-head">
+    <h2 id="pos-h" data-reveal data-t="posH">You know AI can help. You don’t need to know how.</h2>
+    <p data-reveal style="--i:1" data-t="posP"></p>
+  </div>
+  <ul class="pairs">
+    <li data-reveal style="--i:0"><blockquote data-t="p1q"></blockquote><p><b data-t="posNow">What is possible</b><span data-t="p1a"></span></p></li>
+    <li data-reveal style="--i:1"><blockquote data-t="p2q"></blockquote><p><b data-t="posNow">What is possible</b><span data-t="p2a"></span></p></li>
+    <li data-reveal style="--i:2"><blockquote data-t="p3q"></blockquote><p><b data-t="posNow">What is possible</b><span data-t="p3a"></span></p></li>
+    <li data-reveal style="--i:3"><blockquote data-t="p4q"></blockquote><p><b data-t="posNow">What is possible</b><span data-t="p4a"></span></p></li>
+    <li data-reveal style="--i:4"><blockquote data-t="p5q"></blockquote><p><b data-t="posNow">What is possible</b><span data-t="p5a"></span></p></li>
+    <li data-reveal style="--i:5"><blockquote data-t="p6q"></blockquote><p><b data-t="posNow">What is possible</b><span data-t="p6a"></span></p></li>
+  </ul>
+  <div class="pos-foot" data-reveal>
+    <p data-t="posTrust"></p>
+    <div class="hero-actions"><a class="btn btn-dark" href="#scan" data-t="cta">Take the scan</a><a class="btn btn-blue" href="#waitlist" data-t="waitlist">Join the waitlist</a></div>
+  </div>
+</section>
 
 <section class="how" id="how" aria-labelledby="how-h">
   <div class="wrap">
@@ -117,26 +136,31 @@
 </section>
 
 <section class="report wrap" id="report" hidden aria-labelledby="rep-steps-h">
-  <div class="rep-grid">
+  <h3 id="rep-steps-h" data-t="repSteps">What you can do yourself</h3>
+  <ol class="todo" id="rep-steps"></ol>
+  <div id="rep-priv" hidden>
+    <h3 data-t="repPriv">Because the data is sensitive</h3>
+    <ul class="todo" id="rep-check"></ul>
+  </div>
+  <p class="rep-print"><button class="btn btn-dark" id="btn-print" type="button" data-t="print">Save as PDF</button></p>
+</section>
+
+<section class="waitlist" id="waitlist" aria-labelledby="wl-h">
+  <div class="wrap wl-grid">
     <div>
-      <h3 id="rep-steps-h" data-t="repSteps">What you can do yourself</h3>
-      <ol class="todo" id="rep-steps"></ol>
-      <div id="rep-priv" hidden>
-        <h3 data-t="repPriv">Because the data is sensitive</h3>
-        <ul class="todo" id="rep-check"></ul>
-      </div>
+      <h2 id="wl-h" data-reveal data-t="wlH">Join the waitlist</h2>
+      <p data-reveal style="--i:1" data-t="wlP"></p>
+      <p class="wl-scan" id="wl-scan" hidden data-t="wlScan"></p>
     </div>
-    <form class="rep-form" id="rep-form" method="post" action="https://formspree.io/f/xvkkonpn">
-      <h3 data-t="repGet">Get the one-page report by email</h3>
-      <p class="small" data-t="repGetP"></p>
+    <form class="wl-form" id="wl-form" method="post" action="https://formspree.io/f/xvkkonpn" data-reveal style="--i:2">
       <label><span data-t="fEmail">Your email</span><input type="email" name="email" required autocomplete="email"></label>
-      <label><span data-t="fCompany">Company (optional)</span><input type="text" name="company" autocomplete="organization"></label>
+      <label><span data-t="fQ">What work would you hand off tomorrow if you could?</span><textarea name="work" rows="3" required maxlength="600"></textarea></label>
+      <input type="hidden" name="_subject" value="HARNAS waitlist">
       <input type="hidden" name="score" id="f-score">
       <input type="hidden" name="language" id="f-lang">
-      <textarea name="answers" id="f-answers" hidden></textarea>
+      <textarea name="scan" id="f-answers" hidden></textarea>
       <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="sr-only" aria-hidden="true">
-      <button class="btn btn-blue" type="submit" data-t="fSend">Send me the report</button>
-      <button class="btn btn-dark" id="btn-print" type="button" data-t="print">Save as PDF</button>
+      <button class="btn btn-blue" type="submit" data-t="fSend">Join the waitlist</button>
       <p class="form-msg" id="form-msg" aria-live="polite"></p>
     </form>
   </div>
