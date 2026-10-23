@@ -325,9 +325,11 @@ SHOTS = {
 }
 
 # Scroll sequence: 160 frames, fixed camera, emblem turns, comes apart, reassembles plate by plate.
-SEQ_N = 160
-SEQ_DIR = os.path.join(TEAM, 'seq')
-SEQ_TMP = '/tmp/harnas-seq'
+SEQ_BASE = 160    # the motion is authored on a 160-frame timeline (frames 0-159 below)
+SEQ_N = next((int(a[1:]) for a in argv if re.fullmatch(r'n\d+', a)), SEQ_BASE)   # e.g. -- sequence 96 n320
+SEQ_DIR = os.path.join(TEAM, 'seq' if SEQ_N == SEQ_BASE else f'seq{SEQ_N}')
+SEQ_TMP = f'/tmp/harnas-seq{SEQ_N}'
+SOFT_DIM = 0.55   # softbox + lames strip drop to 45% while the plates are apart: the tilted right chest plate faces them
 # Per plate, in build space (x right, y up, z towards the viewer): offset at full separation and
 # extra rotation in degrees. Chest plates go up and out, lames step down and forward.
 EXPLODE = {
@@ -375,14 +377,19 @@ if MODE == 'sequence':
     cam.location = (d2 * math.sin(yaw) * math.cos(pitch), -d2 * math.cos(yaw) * math.cos(pitch), d2 * math.sin(pitch))
     cd.dof.aperture_fstop = 11.0
     scn.frame_start, scn.frame_end = 0, SEQ_N - 1
-    for f in range(SEQ_N):
+    dim_lights = [(bpy.data.objects[n], bpy.data.objects[n].data.energy) for n in ('softbox', 'lames')]
+    for fn in range(SEQ_N):
+        f = fn * (SEQ_BASE - 1) / (SEQ_N - 1)          # resample the 160-frame timeline
         root.rotation_euler = (math.radians(90), 0, math.radians(seq_yaw(f)))
-        root.keyframe_insert('rotation_euler', frame=f)
+        root.keyframe_insert('rotation_euler', frame=fn)
+        for lo, e0 in dim_lights:
+            lo.data.energy = e0 * (1 - SOFT_DIM * seq_amount('r', f))
+            lo.data.keyframe_insert('energy', frame=fn)
         for pid, (off, rot) in EXPLODE.items():
             a, o = seq_amount(pid, f), plates[pid]
             o.delta_location = tuple(a * v for v in off)
             o.delta_rotation_euler = tuple(a * math.radians(v) for v in rot)
-            o.keyframe_insert('delta_location', frame=f); o.keyframe_insert('delta_rotation_euler', frame=f)
+            o.keyframe_insert('delta_location', frame=fn); o.keyframe_insert('delta_rotation_euler', frame=fn)
     os.makedirs(SEQ_TMP, exist_ok=True); os.makedirs(SEQ_DIR, exist_ok=True)
     scn.frame_start, scn.frame_end = first, last
     r.filepath = os.path.join(SEQ_TMP, 'f###')
@@ -394,14 +401,14 @@ if MODE == 'sequence':
         "src,dst,a,b=sys.argv[1],sys.argv[2],int(sys.argv[3]),int(sys.argv[4])\n"
         "for f in range(a,b+1):\n"
         "    Image.open(f'{src}/f{f:03d}.png').save(f'{dst}/f{f:03d}.webp','WEBP',quality=80,alpha_quality=60,method=6)\n"
-        "fr=[f for f in range(0,160,8) if os.path.exists(f'{src}/f{f:03d}.png')]\n"
+        "fr=[f for f in range(0,int(sys.argv[5]),int(sys.argv[5])//20) if os.path.exists(f'{src}/f{f:03d}.png')]\n"
         "T=300;sheet=Image.new('RGB',(T*5,T*((len(fr)+4)//5)),(7,8,11));d=ImageDraw.Draw(sheet)\n"
         "for i,f in enumerate(fr):\n"
         "    im=Image.open(f'{src}/f{f:03d}.png').convert('RGBA').resize((T,T),Image.LANCZOS)\n"
         "    x,y=(i%5)*T,(i//5)*T;sheet.paste(im,(x,y),im);d.text((x+8,y+6),f'f{f:03d}',fill=(150,155,170))\n"
         "sheet.save(f'{dst}/contact.jpg',quality=88)\n"
     )
-    subprocess.run(['python3', '-c', conv, SEQ_TMP, SEQ_DIR, str(first), str(last)], check=True)
+    subprocess.run(['python3', '-c', conv, SEQ_TMP, SEQ_DIR, str(first), str(last), str(SEQ_N)], check=True)
     tot = sum(os.path.getsize(os.path.join(SEQ_DIR, n)) for n in os.listdir(SEQ_DIR) if n.endswith('.webp'))
     print(f'SEQ_TOTAL_KB {tot // 1024}')
 elif MODE == 'parts':
