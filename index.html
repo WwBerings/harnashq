@@ -3,23 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HARNAS · AI agents for the busywork</title>
-<meta name="description" content="We build AI agents that take over repetitive office work, inside the tools you already use. Privacy by design. Take the free AI scan.">
+<title>HARNAS · AI consultancy for small business</title>
+<meta name="description" content="We find the work in your business that AI can take over, and build it at one fixed price, inside the tools you already use. Start with the free scan.">
 <link rel="icon" href="brand/harnas-mark.svg">
 <link rel="stylesheet" href="style.css">
-<script type="importmap">{ "imports": { "three": "./vendor/three/three.module.min.js", "three/addons/": "./vendor/three/addons/" } }</script>
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
 
 <header class="hero" id="top">
-  <canvas id="hero-gl" aria-hidden="true"></canvas>
-  <img class="hero-still" src="img/hero.webp" width="1600" height="1000" alt="Steel HARNAS emblem lit in blue" aria-hidden="true">
+  <video class="hero-video" autoplay muted loop playsinline poster="img/hero-poster.jpg" aria-hidden="true">
+    <source src="img/hero-loop.webm" type="video/webm">
+    <source src="img/hero-loop.mp4" type="video/mp4">
+  </video>
   <nav class="bar wrap" aria-label="Main">
     <a class="brand" href="#top" aria-label="HARNAS home"><svg viewBox="0 0 100 108" aria-hidden="true"><use href="#mark"/></svg><span>HARNAS</span></a>
     <div class="nav-links">
-      <a class="link" href="#how" data-t="navHow">How it works</a>
-      <a class="link" href="#privacy" data-t="navPrivacy">Privacy</a>
+      <a class="link" href="#how" data-t="navHow">How we work</a>
+      <a class="link" href="#privacy" data-t="navPrivacy">Privacy by design</a>
       <a class="link" href="#scan" data-t="navScan">AI scan</a>
     </div>
     <div class="langs" role="group" aria-label="Language">
@@ -29,113 +30,83 @@
     <a class="btn btn-light nav-cta" href="#scan" data-t="cta">Take the scan</a>
   </nav>
   <div class="hero-copy wrap">
-    <h1 data-rise data-t="heroH">AI agents for the busywork.</h1>
-    <p data-rise style="--i:1" data-t="heroP">Built into the tools you already use. Your data stays home.</p>
-    <div class="hero-actions" data-rise style="--i:2">
+    <h1 data-rise data-t="heroH">AI consultancy for small business.</h1>
+    <p class="hero-lead" data-rise style="--i:1" data-t="heroH2">We find what pays off, and build it.</p>
+    <p data-rise style="--i:2" data-t="heroP">Free scan in five minutes. One fixed price for the build. Your data stays in your own systems.</p>
+    <div class="hero-actions" data-rise style="--i:3">
       <a class="btn btn-blue" href="#scan" data-t="cta">Take the scan</a>
-      <a class="btn btn-ghost" href="#demo" data-t="heroSee">See it work</a>
+      <a class="btn btn-ghost" href="#how" data-t="heroHow">How we work</a>
     </div>
   </div>
 </header>
 
 <main>
 
-<section class="demo wrap" id="demo" aria-labelledby="demo-h">
-  <h2 id="demo-h" data-reveal data-t="demoH">It reads. It sorts. You sign off.</h2>
-  <div class="flow" data-ui aria-hidden="true">
-    <div class="col">
-      <p class="col-h" data-t="colIn">Inbox</p>
-      <ul class="items" id="inbox">
-        <li><span data-t="m1">Invoice 2291, March</span></li>
-        <li><span data-t="m2">Signed contract, new client</span></li>
-        <li><span data-t="m3">Can we move Thursday?</span></li>
-        <li><span data-t="m4">Copy of ID is missing</span></li>
-        <li><span data-t="m5">Quote request, 3 sites</span></li>
-      </ul>
-    </div>
-    <div class="core"><svg viewBox="0 0 100 108"><use href="#mark"/></svg></div>
-    <div class="col">
-      <p class="col-h" data-t="colOut">Sorted</p>
-      <ul class="items out" id="sorted">
-        <li><span data-t="m1">Invoice 2291, March</span><b data-t="m1t">Accounting</b></li>
-        <li><span data-t="m2">Signed contract, new client</span><b data-t="m2t">Filed</b></li>
-        <li><span data-t="m3">Can we move Thursday?</span><b data-t="m3t">Reply drafted</b></li>
-        <li class="you"><span data-t="m4">Copy of ID is missing</span><b data-t="m4t">Needs you</b></li>
-        <li><span data-t="m5">Quote request, 3 sites</span><b data-t="m5t">Quote drafted</b></li>
-      </ul>
-    </div>
-  </div>
-</section>
-
 <section class="how" id="how" aria-labelledby="how-h">
   <div class="wrap">
-    <h2 id="how-h" class="sr-only" data-t="howH">Four steps. One price.</h2>
-    <ol class="track">
-      <li><p class="word" data-t="s1">Scan</p><p data-t="s1p">10 questions or 45 minutes.</p></li>
-      <li><p class="word" data-t="s2">Map</p><p data-t="s2p">Three opportunities within 48 hours.</p></li>
-      <li><p class="word" data-t="s3">Build</p><p data-t="s3p">One task, one fixed price.</p></li>
-      <li class="last"><p class="word" data-t="s4">Prove</p><p data-t="s4p">Tested on 3 months of your own work. Under 95% right? The last invoice is on us.</p></li>
+    <h2 id="how-h" data-reveal data-t="howH">How we work</h2>
+    <ol class="steps">
+      <li data-reveal style="--i:0"><p class="word" data-t="w1">Audit</p><p data-t="w1p"></p></li>
+      <li data-reveal style="--i:1"><p class="word" data-t="w2">Proposal</p><p data-t="w2p"></p></li>
+      <li data-reveal style="--i:2"><p class="word" data-t="w3">Build</p><p data-t="w3p"></p></li>
+      <li data-reveal style="--i:3"><p class="word" data-t="w4">Maintain</p><p data-t="w4p"></p></li>
     </ol>
-    <div class="fill" aria-hidden="true"><span id="fill"></span></div>
   </div>
 </section>
 
 <section class="privacy wrap" id="privacy" aria-labelledby="priv-h">
-  <div class="priv-copy">
-    <h2 id="priv-h" data-reveal data-t="privH">Your data stays home.</h2>
-    <p data-reveal style="--i:1" data-t="privP">We only build in what you already use. Business accounts, no training on your data, a person signs off. The rules are the brief:</p>
-    <ul class="sources" data-reveal style="--i:2">
-      <li><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj" data-t="src1">GDPR art. 28 &amp; 32</a></li>
-      <li><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj" data-t="src2">EU AI Act art. 4 &amp; 50</a></li>
-      <li><a href="https://www.advocatenorde.nl/voor-advocaten/digitalisering-ai/aanbevelingen-ai-de-advocatuur" data-t="src3">Dutch Bar (NOvA) AI guidance</a></li>
-      <li><a href="https://www.advocatenorde.nl/voor-advocaten/wet-en-regelgeving/gedragsregels/gedragsregels-advocatuur/de-maatschappelijke-rol" data-t="src4">Dutch Bar rules of conduct 3 &amp; 4</a></li>
-    </ul>
-    <p class="note" data-t="privNote">A summary, not legal advice. Read the source.</p>
+  <div class="priv-head">
+    <h2 id="priv-h" data-reveal data-t="privH">Privacy by design.</h2>
+    <p data-reveal style="--i:1" data-t="privP"></p>
   </div>
-  <div class="vault" data-ui aria-hidden="true">
-    <div class="vault-box">
-      <p class="vault-h" data-t="privBox">Your systems</p>
-      <span class="sys s-a">Microsoft 365</span>
-      <span class="sys s-b">Google</span>
-      <span class="sys s-c" data-t="privSw">Your software</span>
-      <span class="agent"><svg viewBox="0 0 100 108"><use href="#mark"/></svg></span>
-    </div>
-    <p class="vault-out" data-t="privOut">Nothing leaves</p>
+  <div class="laws">
+    <div class="law-head" aria-hidden="true"><span></span><span data-t="colWhat">What it is</span><span data-t="colYou">What it asks of you</span><span data-t="colUs">How we build for it</span></div>
+    <article class="law" data-reveal><h3 data-t="l1"></h3><p><b data-t="colWhat"></b><span data-t="l1w"></span></p><p><b data-t="colYou"></b><span data-t="l1y"></span></p><p class="us"><b data-t="colUs"></b><span data-t="l1u"></span></p></article>
+    <article class="law" data-reveal><h3 data-t="l2"></h3><p><b data-t="colWhat"></b><span data-t="l2w"></span></p><p><b data-t="colYou"></b><span data-t="l2y"></span></p><p class="us"><b data-t="colUs"></b><span data-t="l2u"></span></p></article>
+    <article class="law" data-reveal><h3 data-t="l3"></h3><p><b data-t="colWhat"></b><span data-t="l3w"></span></p><p><b data-t="colYou"></b><span data-t="l3y"></span></p><p class="us"><b data-t="colUs"></b><span data-t="l3u"></span></p></article>
+    <article class="law" data-reveal><h3 data-t="l4"></h3><p><b data-t="colWhat"></b><span data-t="l4w"></span></p><p><b data-t="colYou"></b><span data-t="l4y"></span></p><p class="us"><b data-t="colUs"></b><span data-t="l4u"></span></p></article>
   </div>
 </section>
 
 <section class="scan" id="scan" aria-labelledby="scan-h">
   <div class="stage">
-    <canvas id="level-gl" aria-hidden="true"></canvas>
-    <img class="level-still" src="img/level-0.webp" width="1200" height="1200" alt="Steel HARNAS emblem, unlit" aria-hidden="true">
-    <p class="score-num" id="score-num" aria-hidden="true"></p>
+    <div class="gauge" aria-hidden="true">
+      <svg viewBox="0 0 100 100"><circle class="g-bg" cx="50" cy="50" r="44"/><circle class="g-fg" id="gauge-arc" cx="50" cy="50" r="44"/></svg>
+      <p class="score-num"><span id="score-num"></span><small id="score-of" data-t="scoreOf">out of 100</small></p>
+    </div>
+    <p class="verdict" id="verdict"></p>
+    <div class="impact" id="impact" hidden>
+      <p><b id="hours-yr"></b><span data-t="hoursYr">hours a year go into this now</span></p>
+      <p><b id="cost-yr"></b><span data-t="costYr">a year at your own rate</span></p>
+      <p class="basis" data-t="basis">Based on your own numbers. An indication, not a promise.</p>
+    </div>
   </div>
   <div class="panel">
-    <h2 id="scan-h" data-t="scanH">How strong is your harness?</h2>
-    <p class="sub" data-t="scanP">10 questions. Your score lights the harness. Answers stay in your browser.</p>
-    <ul class="tiers" aria-label="Levels">
-      <li><img src="img/level-1.webp" width="600" height="600" loading="lazy" alt="Emblem smouldering blue"><b data-t="t1">Smoulder</b><span>0–49</span></li>
-      <li><img src="img/level-2.webp" width="600" height="600" loading="lazy" alt="Emblem burning"><b data-t="t2">Burn</b><span>50–79</span></li>
-      <li><img src="img/level-3.webp" width="600" height="600" loading="lazy" alt="Emblem white-hot"><b data-t="t3">White-hot</b><span>80–100</span></li>
-    </ul>
+    <h2 id="scan-h" data-t="scanH">Where does AI pay off in your business?</h2>
+    <p class="sub" data-t="scanP"></p>
     <div class="tabs" role="tablist" aria-label="Scan">
       <button role="tab" id="tab-q" aria-selected="true" aria-controls="pane-q" data-t="tabQ">Questions</button>
       <button role="tab" id="tab-r" aria-selected="false" aria-controls="pane-r" disabled data-t="tabR">Result</button>
-      <button role="tab" id="tab-f" aria-selected="false" aria-controls="pane-f" data-t="tabF">Formula</button>
+      <button role="tab" id="tab-f" aria-selected="false" aria-controls="pane-f" data-t="tabF">How we score</button>
     </div>
     <div class="pane" id="pane-q" role="tabpanel" aria-labelledby="tab-q">
       <fieldset>
         <legend id="q-text"></legend>
+        <p class="hint" id="q-hint"></p>
         <div class="opts" id="opts"></div>
       </fieldset>
       <p class="rest" id="rest" aria-live="polite"></p>
     </div>
     <div class="pane" id="pane-r" role="tabpanel" aria-labelledby="tab-r" hidden>
       <p class="res-h" id="res-h"></p>
-      <p class="sub" id="res-p"></p>
+      <div class="drivers">
+        <div><h3 data-t="lifts">What lifts the score</h3><ul id="lifts"></ul></div>
+        <div><h3 data-t="holds">What holds it back</h3><ul id="holds"></ul></div>
+      </div>
+      <div class="verify" id="verify-wrap" hidden><h3 data-t="verify">To verify in a call</h3><ul id="verify"></ul></div>
     </div>
     <div class="pane" id="pane-f" role="tabpanel" aria-labelledby="tab-f" hidden>
-      <p class="sub" data-t="formula"></p>
+      <p class="sub" id="formula-text"></p>
     </div>
     <noscript><p class="sub">The scan runs in your browser and needs JavaScript. <a href="mailto:hallo@harnashq.com?subject=AI%20scan">hallo@harnashq.com</a></p></noscript>
     <div class="actions">
@@ -150,30 +121,27 @@
   <div class="rep-grid">
     <div>
       <p class="rep-lead" id="rep-lead"></p>
-      <h3 data-t="repSteps">Three steps you can take yourself</h3>
+      <h3 data-t="repSteps">What you can do yourself</h3>
       <ol class="todo" id="rep-steps"></ol>
       <div id="rep-priv" hidden>
-        <h3 data-t="repPriv">Because your data is sensitive</h3>
+        <h3 data-t="repPriv">Because the data is sensitive</h3>
         <ul class="todo" id="rep-check"></ul>
       </div>
     </div>
-    <div class="rep-side">
-      <p class="big"><span id="rep-hours"></span><small data-t="repHours">hours a week, estimate</small></p>
-      <p class="small" data-t="repNote"></p>
-      <div class="rep-actions">
-        <a class="btn btn-blue" id="btn-mail" href="mailto:hallo@harnashq.com">Email us</a>
-        <button class="btn btn-dark" id="btn-print" type="button" data-t="print">Save as PDF</button>
-      </div>
-    </div>
+    <form class="rep-form" id="rep-form" method="post" action="https://formspree.io/f/FORM_ID">
+      <h3 data-t="repGet">Get the one-page report by email</h3>
+      <p class="small" data-t="repGetP"></p>
+      <label><span data-t="fEmail">Your email</span><input type="email" name="email" required autocomplete="email"></label>
+      <label><span data-t="fCompany">Company (optional)</span><input type="text" name="company" autocomplete="organization"></label>
+      <input type="hidden" name="score" id="f-score">
+      <input type="hidden" name="language" id="f-lang">
+      <textarea name="answers" id="f-answers" hidden></textarea>
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="sr-only" aria-hidden="true">
+      <button class="btn btn-blue" type="submit" data-t="fSend">Send me the report</button>
+      <button class="btn btn-dark" id="btn-print" type="button" data-t="print">Save as PDF</button>
+      <p class="form-msg" id="form-msg" aria-live="polite"></p>
+    </form>
   </div>
-</section>
-
-<section class="faq wrap" id="faq" aria-labelledby="faq-h">
-  <h2 id="faq-h" data-t="faqH">Questions</h2>
-  <div class="qa" data-reveal><h3 data-t="q1">What does it cost?</h3><p data-t="a1"></p></div>
-  <div class="qa" data-reveal><h3 data-t="q2">Does my data go to ChatGPT?</h3><p data-t="a2"></p></div>
-  <div class="qa" data-reveal><h3 data-t="q3">What if it makes a mistake?</h3><p data-t="a3"></p></div>
-  <div class="qa" data-reveal><h3 data-t="q4">Only for law firms?</h3><p data-t="a4"></p></div>
 </section>
 
 </main>
@@ -181,10 +149,12 @@
 <footer class="foot">
   <div class="foot-cols wrap">
     <div><p data-t="footContact">Contact</p><p><a class="link" href="mailto:hallo@harnashq.com">hallo@harnashq.com</a></p></div>
-    <div><p data-t="footSources">Sources</p><p><a class="link" href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">GDPR</a> · <a class="link" href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">AI Act</a> · <a class="link" href="https://www.advocatenorde.nl/voor-advocaten/digitalisering-ai/aanbevelingen-ai-de-advocatuur">NOvA</a></p></div>
   </div>
   <div class="foot-mark wrap">
-    <svg class="foot-word" viewBox="0 0 1000 150" role="img" aria-label="HARNAS"><text x="0" y="132" textLength="1000" lengthAdjust="spacingAndGlyphs">HARNAS</text></svg>
+    <div class="foot-row">
+      <svg class="foot-logo" viewBox="0 0 100 108" aria-hidden="true"><use href="#mark"/></svg>
+      <svg class="foot-word" viewBox="0 0 1000 150" role="img" aria-label="HARNAS"><text x="0" y="132" textLength="1000" lengthAdjust="spacingAndGlyphs">HARNAS</text></svg>
+    </div>
     <p class="legal">© 2026 HARNAS · <a class="link" href="privacy.html" data-t="privacyLink">Privacy statement</a> · <span data-t="legal">No cookies, no trackers</span></p>
   </div>
 </footer>

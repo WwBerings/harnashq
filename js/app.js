@@ -1,50 +1,21 @@
-import { QUESTIONS, report, mailBody } from './scan.js';
+import { QUESTIONS, complete, report, submissionText, UITLEG } from './scan.js';
 import { getLang, saveLang, apply, tr } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
-const MAIL = 'hallo@harnashq.com';
 const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let lang = getLang();
 
-// ---------------- taal ----------------
-function setLang(l) { lang = l; saveLang(l); apply(l); render(); }
+// ---------------- language ----------------
+function setLang(l) { lang = l; saveLang(l); apply(l); $('formula-text').textContent = UITLEG[l]; render(); }
 document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => setLang(b.dataset.lang)));
 
-// ---------------- binnenkomst ----------------
+// ---------------- reveal on entry ----------------
 const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
-document.querySelectorAll('[data-reveal], .flow, .vault, .track li').forEach((el) => io.observe(el));
-
-// Werkwijze: de balk vult mee met het scrollen.
-const fill = $('fill'), how = $('how');
-function onScroll() {
-  const r = how.getBoundingClientRect();
-  const k = Math.min(1, Math.max(0, (innerHeight * 0.8 - r.top) / (r.height + innerHeight * 0.3)));
-  fill.style.transform = `scaleX(${k})`;
-}
-addEventListener('scroll', onScroll, { passive: true }); onScroll();
-
-// ---------------- 3D ----------------
-let lvl = null;
-// De stills staan er meteen; 3D start pas na de eerste paint, het scanharnas pas als je in de buurt bent.
-if (!still) {
-  const idle = window.requestIdleCallback || ((f) => setTimeout(f, 300));
-  idle(() => import('./hero3d.js').then((m) => m.hero($('hero-gl'))).then((ok) => ok && document.body.classList.add('gl-hero')).catch(() => {}), { timeout: 1200 });
-  const near = new IntersectionObserver(([e]) => {
-    if (!e.isIntersecting) return;
-    near.disconnect();
-    import('./level.js').then((m) => m.level($('level-gl'))).then((l) => {
-      if (!l) return;
-      lvl = l; document.body.classList.add('gl-level');
-      if (last) lvl.set(last.score, true);
-    }).catch(() => {});
-  }, { rootMargin: '800px 0px' });
-  near.observe($('scan'));
-}
+document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
 
 // ---------------- scan ----------------
 const answers = {};
-let i = -1;                // -1 = not started, QUESTIONS.length = done
-let last = null;           // last report
+let i = -1;                 // -1 = not started, QUESTIONS.length = done
 const back = $('btn-back'), go = $('btn-go');
 const tabs = { q: $('tab-q'), r: $('tab-r'), f: $('tab-f') };
 const panes = { q: $('pane-q'), r: $('pane-r'), f: $('pane-f') };
@@ -52,21 +23,50 @@ const panes = { q: $('pane-q'), r: $('pane-r'), f: $('pane-f') };
 function showTab(k) { for (const n in tabs) { tabs[n].setAttribute('aria-selected', String(n === k)); panes[n].hidden = n !== k; } }
 for (const [k, b] of Object.entries(tabs)) b.addEventListener('click', () => !b.disabled && showTab(k));
 
+const answered = (qd) => {
+  const v = answers[qd.id];
+  if (qd.multi) return Array.isArray(v) && v.length > 0;
+  if (!v) return false;
+  const opt = qd.a.find(([k]) => k === v)?.[2];
+  if (opt?.open === 'text') return !!(answers[opt.field] || '').trim();
+  return true;
+};
+
 function renderQuestion(focus) {
-  const { id, q, a } = QUESTIONS[i];
+  const qd = QUESTIONS[i];
+  const { id, q, a, multi } = qd;
   $('q-text').textContent = q[lang];
+  $('q-hint').textContent = multi ? tr('pickAll', lang) : id === 'kosten' && answers.mensen !== 'een' ? tr('avgHint', lang) : '';
   const box = $('opts'); box.innerHTML = '';
-  for (const [v, l] of a) {
+  for (const [v, l, opt] of a) {
+    const pressed = multi ? (answers[id] || []).includes(v) : answers[id] === v;
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'opt'; b.textContent = l[lang];
-    b.setAttribute('aria-pressed', String(answers[id] === v));
-    b.addEventListener('click', () => { answers[id] = v; next(); });
-    box.appendChild(b);
+    b.setAttribute('aria-pressed', String(pressed));
+    b.addEventListener('click', () => {
+      if (multi) {
+        const set = new Set(answers[id] || []); set.has(v) ? set.delete(v) : set.add(v);
+        answers[id] = [...set]; renderQuestion(false); return;
+      }
+      answers[id] = v;
+      if (opt?.open) { renderQuestion(false); box.querySelector('input')?.focus(); return; }
+      next();
+    });
+    if (opt?.open && answers[id] === v) {
+      const wrap = document.createElement('div'); wrap.className = 'opt-free'; wrap.appendChild(b);
+      const inp = document.createElement('input');
+      inp.type = opt.open === 'number' ? 'number' : 'text'; inp.inputMode = opt.open === 'number' ? 'decimal' : 'text';
+      inp.placeholder = tr(opt.open === 'number' ? 'numPh' : 'otherPh', lang); inp.value = answers[opt.field] || ''; inp.maxLength = 120;
+      inp.setAttribute('aria-label', l[lang]);
+      inp.addEventListener('input', () => { answers[opt.field] = inp.value; go.disabled = !answered(qd); go.textContent = tr(answered(qd) ? 'next' : 'pick', lang); });
+      inp.addEventListener('keydown', (e) => { if (e.key === 'Enter' && answered(qd)) { e.preventDefault(); next(); } });
+      wrap.appendChild(inp); box.appendChild(wrap);
+    } else box.appendChild(b);
   }
   const n = QUESTIONS.length - i - 1;
   $('rest').textContent = n === 0 ? tr('last', lang) : tr('left', lang, { n });
-  back.disabled = i === 0; back.dataset.t = 'back'; back.textContent = tr('back', lang);
-  go.disabled = !answers[id]; go.textContent = tr(answers[id] ? 'next' : 'pick', lang);
+  back.disabled = i === 0; back.textContent = tr('back', lang);
+  go.disabled = !answered(qd); go.textContent = tr(answered(qd) ? 'next' : 'pick', lang);
   if (focus) box.querySelector('.opt')?.focus({ preventScroll: true });
 }
 
@@ -81,53 +81,47 @@ function countUp(el, to) {
 
 function finish() {
   i = QUESTIONS.length;
-  last = report(answers, lang);
-  const tierN = last.score >= 80 ? 3 : last.score >= 50 ? 2 : 1;
-  document.querySelector('.scan').dataset.tier = tierN;
-  countUp($('score-num'), last.score);
-  lvl?.set(last.score);
-  if (!lvl) document.querySelector('.level-still').src = `img/level-${tierN}.webp`;
   tabs.r.disabled = false; showTab('r');
   $('report').hidden = false;
   render();
+  const r = report(answers, lang);
+  countUp($('score-num'), r.score);
+  $('gauge-arc').style.strokeDashoffset = String(276.46 * (1 - r.score / 100));
 }
 
 function render() {
   if (i >= 0 && i < QUESTIONS.length) renderQuestion(false);
   if (i === -1) { go.textContent = tr('start', lang); go.disabled = false; }
-  if (i !== QUESTIONS.length) return;
-  last = report(answers, lang);
-  const call = last.route === 'gesprek';
-  const tierKey = last.score >= 80 ? 't3' : last.score >= 50 ? 't2' : 't1';
-  $('res-h').textContent = `${last.score} / 100 · ${tr(tierKey, lang)}`;
-  $('res-p').textContent = tr(call ? 'resCall' : 'resSelf', lang, { h: last.perWeek });
-  $('rep-lead').textContent = tr(call ? 'repCall' : 'repSelf', lang, { s: last.score });
-  $('rep-hours').textContent = last.perWeek;
-  fill_('rep-steps', last.stappen);
-  $('rep-priv').hidden = last.privacy.length === 0;
-  fill_('rep-check', last.privacy);
-  const href = `mailto:${MAIL}?subject=${encodeURIComponent(tr('subject', lang, { s: last.score }))}&body=${encodeURIComponent(mailBody(answers, lang))}`;
-  const mail = $('btn-mail'); mail.href = href; mail.textContent = tr(call ? 'book' : 'mailAnyway', lang);
+  if (i !== QUESTIONS.length || !complete(answers)) return;
+  const r = report(answers, lang);
+  const call = r.route === 'gesprek';
+  $('verdict').textContent = `${r.bandNaam}. ${r.oordeel}`;
+  $('impact').hidden = false;
+  $('hours-yr').textContent = r.urenPerJaar.toLocaleString(lang === 'nl' ? 'nl-NL' : 'en-GB');
+  $('cost-yr').textContent = r.euro;
+  $('res-h').textContent = tr(call ? 'resCall' : 'resSelf', lang, { lo: r.urenDeel[0], hi: r.urenDeel[1] });
+  fill('lifts', r.sterk); fill('holds', r.zwak);
+  $('verify-wrap').hidden = r.verifieer.length === 0; fill('verify', r.verifieer);
+  $('rep-lead').textContent = tr(call ? 'repCall' : 'repSelf', lang, { s: r.score, task: r.taak });
+  fill('rep-steps', r.stappen);
+  $('rep-priv').hidden = r.privacy.length === 0; fill('rep-check', r.privacy);
+  $('f-score').value = r.score; $('f-lang').value = lang;
+  $('f-answers').value = submissionText(answers, { lang });
   back.disabled = false; back.textContent = tr('again', lang);
   go.disabled = false; go.textContent = tr(call ? 'book' : 'read', lang);
-  go.dataset.href = call ? href : '#report';
 }
 
-function fill_(id, items) { const el = $(id); el.innerHTML = ''; for (const t of items) { const li = document.createElement('li'); li.textContent = t; el.appendChild(li); } }
+function fill(id, items) { const el = $(id); el.innerHTML = ''; for (const t of items) { const li = document.createElement('li'); li.textContent = t; el.appendChild(li); } }
 
 go.addEventListener('click', () => {
   if (i === -1) { i = 0; showTab('q'); renderQuestion(true); return; }
-  if (i === QUESTIONS.length) {
-    const h = go.dataset.href;
-    if (h.startsWith('#')) $('report').scrollIntoView({ behavior: still ? 'auto' : 'smooth' }); else location.href = h;
-    return;
-  }
+  if (i === QUESTIONS.length) { $('report').scrollIntoView({ behavior: still ? 'auto' : 'smooth' }); $('rep-form').querySelector('input[type=email]').focus({ preventScroll: true }); return; }
   next();
 });
 back.addEventListener('click', () => {
   if (i === QUESTIONS.length) {
     for (const k in answers) delete answers[k];
-    lvl?.reset(); $('score-num').textContent = ''; delete document.querySelector('.scan').dataset.tier;
+    $('score-num').textContent = ''; $('gauge-arc').style.strokeDashoffset = '276.46'; $('verdict').textContent = ''; $('impact').hidden = true;
     $('report').hidden = true; tabs.r.disabled = true;
     i = 0; showTab('q'); renderQuestion(true); return;
   }
@@ -135,4 +129,18 @@ back.addEventListener('click', () => {
 });
 $('btn-print').addEventListener('click', () => print());
 
-apply(lang); render();
+// ---------------- form: the submission goes to the HARNAS mailbox ----------------
+const form = $('rep-form');
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = $('form-msg'); msg.textContent = '';
+  const btn = form.querySelector('[type=submit]'); btn.disabled = true;
+  try {
+    const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+    if (!res.ok) throw new Error(String(res.status));
+    msg.textContent = tr('fSent', lang); form.querySelector('input[type=email]').value = '';
+  } catch { msg.textContent = tr('fFail', lang); }
+  btn.disabled = false;
+});
+
+apply(lang); $('formula-text').textContent = UITLEG[lang]; render();
