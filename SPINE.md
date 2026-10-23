@@ -62,6 +62,6 @@ Niets middeleeuws meer. Het harnas is alleen nog het logo: een strak borstharnas
 
 ## Voor livegang nog nodig
 
-- Mailbox hallo@harnashq.com werkend (de scan verstuurt via mailto).
+- Mailbox info@harnashq.com werkend (de scan verstuurt via mailto).
 - KvK-nummer in de footer (verplicht voor een zakelijke site).
 - Juridische toets van de privacysectie door een advocaat.

@@ -134,6 +134,11 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const msg = $('form-msg'); msg.textContent = '';
   const btn = form.querySelector('[type=submit]'); btn.disabled = true;
+  if (form.action.includes('FORM_ID')) { // no form service yet: open a prefilled mail instead
+    const body = `${form.email.value}\n${form.company.value}\n\n${$('f-answers').value}`;
+    location.href = `mailto:info@harnashq.com?subject=${encodeURIComponent('AI scan ' + $('f-score').value)}&body=${encodeURIComponent(body)}`;
+    btn.disabled = false; return;
+  }
   try {
     const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
     if (!res.ok) throw new Error(String(res.status));

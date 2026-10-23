@@ -89,7 +89,7 @@ export const STRINGS = {
     'We sturen het zelf, meestal binnen een werkdag. Je antwoorden gaan mee, zodat we ze kunnen lezen.'],
   fEmail: ['Your email', 'Je e-mail'], fCompany: ['Company (optional)', 'Bedrijf (optioneel)'],
   fSend: ['Send me the report', 'Stuur me het rapport'], fSent: ['Sent. You will hear from us.', 'Verstuurd. Je hoort van ons.'],
-  fFail: ['That did not work. Email us at hallo@harnashq.com.', 'Dat lukte niet. Mail ons op hallo@harnashq.com.'],
+  fFail: ['That did not work. Email us at info@harnashq.com.', 'Dat lukte niet. Mail ons op info@harnashq.com.'],
   print: ['Save as PDF', 'Bewaar als pdf'],
 
   footContact: ['Contact', 'Contact'],
