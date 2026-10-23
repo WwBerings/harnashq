@@ -25,29 +25,21 @@ for (const [k, b] of Object.entries(tabs)) b.addEventListener('click', () => !b.
 
 const answered = (qd) => {
   const v = answers[qd.id];
-  if (qd.multi) return Array.isArray(v) && v.length > 0;
   if (!v) return false;
   const opt = qd.a.find(([k]) => k === v)?.[2];
-  if (opt?.open === 'text') return !!(answers[opt.field] || '').trim();
-  return true;
+  return !opt?.open || !!(answers[opt.field] || '').trim();
 };
 
 function renderQuestion(focus) {
   const qd = QUESTIONS[i];
-  const { id, q, a, multi } = qd;
+  const { id, q, a } = qd;
   $('q-text').textContent = q[lang];
-  $('q-hint').textContent = multi ? tr('pickAll', lang) : id === 'kosten' && answers.mensen !== 'een' ? tr('avgHint', lang) : '';
   const box = $('opts'); box.innerHTML = '';
   for (const [v, l, opt] of a) {
-    const pressed = multi ? (answers[id] || []).includes(v) : answers[id] === v;
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'opt'; b.textContent = l[lang];
-    b.setAttribute('aria-pressed', String(pressed));
+    b.setAttribute('aria-pressed', String(answers[id] === v));
     b.addEventListener('click', () => {
-      if (multi) {
-        const set = new Set(answers[id] || []); set.has(v) ? set.delete(v) : set.add(v);
-        answers[id] = [...set]; renderQuestion(false); return;
-      }
       answers[id] = v;
       if (opt?.open) { renderQuestion(false); box.querySelector('input')?.focus(); return; }
       next();
@@ -55,8 +47,7 @@ function renderQuestion(focus) {
     if (opt?.open && answers[id] === v) {
       const wrap = document.createElement('div'); wrap.className = 'opt-free'; wrap.appendChild(b);
       const inp = document.createElement('input');
-      inp.type = opt.open === 'number' ? 'number' : 'text'; inp.inputMode = opt.open === 'number' ? 'decimal' : 'text';
-      inp.placeholder = tr(opt.open === 'number' ? 'numPh' : 'otherPh', lang); inp.value = answers[opt.field] || ''; inp.maxLength = 120;
+      inp.type = 'text'; inp.placeholder = tr('otherPh', lang); inp.value = answers[opt.field] || ''; inp.maxLength = 120;
       inp.setAttribute('aria-label', l[lang]);
       inp.addEventListener('input', () => { answers[opt.field] = inp.value; go.disabled = !answered(qd); go.textContent = tr(answered(qd) ? 'next' : 'pick', lang); });
       inp.addEventListener('keydown', (e) => { if (e.key === 'Enter' && answered(qd)) { e.preventDefault(); next(); } });
@@ -95,21 +86,19 @@ function render() {
   if (i === -1) { go.textContent = tr('start', lang); go.disabled = false; }
   if (i !== QUESTIONS.length || !complete(answers)) return;
   const r = report(answers, lang);
-  const call = r.route === 'gesprek';
+  const n = (x) => x.toLocaleString(lang === 'nl' ? 'nl-NL' : 'en-GB');
   $('verdict').textContent = `${r.bandNaam}. ${r.oordeel}`;
   $('impact').hidden = false;
-  $('hours-yr').textContent = r.urenPerJaar.toLocaleString(lang === 'nl' ? 'nl-NL' : 'en-GB');
-  $('cost-yr').textContent = r.euro;
-  fill('lifts', r.sterk); fill('holds', r.zwak);
+  $('hours-yr').textContent = n(r.urenPerJaar);
+  $('fit-yr').textContent = `${n(r.urenDeel[0])} – ${n(r.urenDeel[1])}`;
   $('verify-wrap').hidden = r.verifieer.length === 0; fill('verify', r.verifieer);
-  fill('rep-steps', r.stappen);
-  $('rep-priv').hidden = r.privacy.length === 0; fill('rep-check', r.privacy);
+  fill('rep-steps', r.stappen); fill('rep-check', r.privacy);
   $('f-score').value = r.score; $('f-lang').value = lang;
   $('f-answers').value = submissionText(answers, { lang }) + '\n\n---- report ----\n' + reportText(answers, lang);
   $('wl-scan').hidden = false;
   back.disabled = false; back.textContent = tr('again', lang);
-  go.disabled = false; go.textContent = tr(call ? 'waitlist' : 'read', lang);
-  go.dataset.target = call ? '#waitlist' : '#report';
+  go.disabled = false; go.textContent = tr(r.route === 'gesprek' ? 'waitlist' : 'read', lang);
+  go.dataset.target = r.route === 'gesprek' ? '#waitlist' : '#report';
 }
 
 function fill(id, items) { const el = $(id); el.innerHTML = ''; for (const t of items) { const li = document.createElement('li'); li.textContent = t; el.appendChild(li); } }
@@ -123,24 +112,20 @@ back.addEventListener('click', () => {
   if (i === QUESTIONS.length) {
     for (const k in answers) delete answers[k];
     $('score-num').textContent = ''; $('gauge-arc').style.strokeDashoffset = '276.46'; $('verdict').textContent = ''; $('impact').hidden = true;
-    $('report').hidden = true; $('wl-scan').hidden = true; $('f-answers').value = ''; $('f-score').value = ''; tabs.r.disabled = true; delete document.querySelector('.scan').dataset.done;
+    $('report').hidden = true; $('wl-scan').hidden = true; $('f-answers').value = ''; $('f-score').value = '';
+    tabs.r.disabled = true; delete document.querySelector('.scan').dataset.done;
     i = 0; showTab('q'); renderQuestion(true); return;
   }
   if (i > 0) { i--; showTab('q'); renderQuestion(true); }
 });
 $('btn-print').addEventListener('click', () => print());
 
-// ---------------- form: the submission goes to the HARNAS mailbox ----------------
+// ---------------- waitlist: the submission goes to the HARNAS mailbox ----------------
 const form = $('wl-form');
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const msg = $('form-msg'); msg.textContent = '';
   const btn = form.querySelector('[type=submit]'); btn.disabled = true;
-  if (form.action.includes('FORM_ID')) { // no form service yet: open a prefilled mail instead
-    const body = `${form.email.value}\n${form.work.value}\n\n${$('f-answers').value}`;
-    location.href = `mailto:info@harnashq.com?subject=${encodeURIComponent('AI scan ' + $('f-score').value)}&body=${encodeURIComponent(body)}`;
-    btn.disabled = false; return;
-  }
   try {
     const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
     if (!res.ok) throw new Error(String(res.status));

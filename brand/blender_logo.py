@@ -4,7 +4,9 @@
 #         -> team/hero-still.png (flattened on #07080B), team/hero-still-alpha.png
 # Loop:   Blender -b --python brand/blender_logo.py -- loop  [samples=128] [scale%=100]
 #         -> team/hero-loop.webm, team/hero-loop.mp4, team/hero-poster.png (frames in /tmp/harnas-loop)
-# Both save brand/harnas.blend. (Blender = /Applications/Blender.app/Contents/MacOS/Blender)
+# Parts:  Blender -b --python brand/blender_logo.py -- parts [samples=256] [scale%] [plates|seam|lames ...]
+#         -> team/part-<name>.png (transparent, 1200x1200) + .webp (q82, alpha)
+# All modes save brand/harnas.blend. (Blender = /Applications/Blender.app/Contents/MacOS/Blender)
 #
 # Geometry is read straight from brand/harnas-mark.svg. The paths are simple M/L/Q/Z polygons, so the
 # script parses them itself instead of bpy.ops.import_curve.svg: exact control over scale, pivots and
@@ -20,9 +22,10 @@ BLEND = os.path.join(HERE, 'harnas.blend')
 FRAMES = '/tmp/harnas-loop'
 
 argv = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
-MODE = argv[0] if argv and argv[0] in ('still', 'loop') else 'still'
+MODE = argv[0] if argv and argv[0] in ('still', 'loop', 'parts') else 'still'
+ONLY = [a for a in argv[1:] if a.isalpha()]   # parts mode: optional shot names, e.g. -- parts 64 seam
 num = [a for a in argv if a.isdigit()]
-SAMPLES = int(num[0]) if num else (384 if MODE == 'still' else 128)
+SAMPLES = int(num[0]) if num else {'still': 384, 'loop': 128, 'parts': 256}[MODE]
 PCT = int(num[1]) if len(num) > 1 else 100
 
 FPS, SECONDS = 30, 8
@@ -215,7 +218,7 @@ area('strip', (0.8, -3.5, 4.8), 7.0, 260, (0.95, 0.97, 1.0), size_y=0.35)
 # fall off. In the loop this softbox is the one that sweeps.
 SOFT_AZ = 44
 softbox = area('softbox', ring(SOFT_AZ), 2.6, 62, (1.0, 0.985, 0.96), size_y=9.0)
-area('kicker', ring(-2), 2.0, 14, (0.92, 0.95, 1.0), size_y=9.0)
+kicker = area('kicker', ring(-2), 2.0, 14, (0.92, 0.95, 1.0), size_y=9.0)
 # The lames tilt up 6 deg, so they mirror ~12 deg higher than the chest plates: a wide low strip there.
 area('lames', ring(20, z=2.0), 7.0, 22, (1.0, 0.99, 0.97), size_y=1.4)
 area('fill',  (5.5, -6.0, -1.0), 4.0, 90, (0.85, 0.9, 1.0))
@@ -309,7 +312,40 @@ BG = '0x07080B'
 FLAT = ("from PIL import Image;import sys;f=Image.open(sys.argv[1]).convert('RGBA');"
         "b=Image.new('RGBA',f.size,(7,8,11,255));Image.alpha_composite(b,f).convert('RGB').save(sys.argv[2])")
 
-if MODE == 'still':
+# Section images: close crops on parts of the emblem, same scene, lights and materials.
+# name: (aim point in world space, yaw deg, pitch deg, distance m, lens mm, f-stop, exposure)
+# The softbox is re-aimed per shot with the hero's rule: its inner edge sits in the mirror direction
+# of the view (azimuth yaw + 22 deg, kicker at yaw - 24 deg, elevation about 5 deg above minus the camera pitch).
+SHOTS = {
+    'plates': ((0.03, 0.0, 0.46), 24, 24, 4.3, 85, 8.0, 0.5),
+    'seam':   ((0.0, -0.06, 0.22), 30, 8, 1.7, 100, 4.0, 0.0),
+    'lames':  ((0.05, 0.0, -0.52), 18, -10, 2.9, 85, 8.0, -1.0),
+}
+
+if MODE == 'parts':
+    r.resolution_x = r.resolution_y = 1200
+    root.animation_data_clear(); softbox.animation_data_clear()
+    root.rotation_euler = (math.radians(90), 0, 0)
+    for name, (aim, yw, pt, dist, lens, fstop, ev) in SHOTS.items():
+        if ONLY and name not in ONLY:
+            continue
+        target.location = aim
+        softbox.location = ring(yw + 22, z=10.0 * math.tan(math.radians(5 - pt)))
+        kicker.location = ring(yw - 24, z=10.0 * math.tan(math.radians(5 - pt)))
+        scn.view_settings.exposure = ev
+        yw, pt = math.radians(yw), math.radians(pt)
+        cam.location = (aim[0] + dist * math.sin(yw) * math.cos(pt),
+                        aim[1] - dist * math.cos(yw) * math.cos(pt),
+                        aim[2] + dist * math.sin(pt))
+        cd.lens = lens; cd.dof.aperture_fstop = fstop
+        png = os.path.join(TEAM, f'part-{name}.png')
+        r.filepath = png
+        bpy.ops.render.render(write_still=True)
+        subprocess.run(['python3', '-c', "from PIL import Image;import sys;"
+                        "Image.open(sys.argv[1]).save(sys.argv[2],'WEBP',quality=82,method=6)",
+                        png, png[:-4] + '.webp'], check=True)
+        print('wrote', png, os.path.getsize(png[:-4] + '.webp') // 1024, 'KB webp')
+elif MODE == 'still':
     alpha = os.path.join(TEAM, 'hero-still-alpha.png')
     r.filepath = alpha
     bpy.ops.render.render(write_still=True)
