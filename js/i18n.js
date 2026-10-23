@@ -8,7 +8,7 @@ export const STRINGS = {
   navScan: ['AI scan', 'AI-scan'],
   cta: ['Take the scan', 'Doe de scan'],
   heroH: ['AI consultancy for small business.', 'AI-consultancy voor het mkb.'],
-  heroP: ['We find what pays off, and build it. Privacy by design.', 'Wij vinden wat loont, en bouwen het. Privacy by design.'],
+  heroP: ['We find what saves your business time or money, and build it. Privacy by design.', 'Wij vinden wat je bedrijf tijd of geld bespaart, en bouwen het. Privacy by design.'],
   heroHow: ['How we work', 'Hoe we werken'],
 
   howH: ['How we work', 'Hoe we werken'],
