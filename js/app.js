@@ -100,10 +100,8 @@ function render() {
   $('impact').hidden = false;
   $('hours-yr').textContent = r.urenPerJaar.toLocaleString(lang === 'nl' ? 'nl-NL' : 'en-GB');
   $('cost-yr').textContent = r.euro;
-  $('res-h').textContent = tr(call ? 'resCall' : 'resSelf', lang, { lo: r.urenDeel[0], hi: r.urenDeel[1] });
   fill('lifts', r.sterk); fill('holds', r.zwak);
   $('verify-wrap').hidden = r.verifieer.length === 0; fill('verify', r.verifieer);
-  $('rep-lead').textContent = tr(call ? 'repCall' : 'repSelf', lang, { s: r.score, task: r.taak });
   fill('rep-steps', r.stappen);
   $('rep-priv').hidden = r.privacy.length === 0; fill('rep-check', r.privacy);
   $('f-score').value = r.score; $('f-lang').value = lang;
