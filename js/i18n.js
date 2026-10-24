@@ -48,6 +48,7 @@ export const STRINGS = {
   fEmail: ['Your email', 'Je e-mail'],
   fQ: ['Which job should we look at, and roughly how many hours a week go into it?', 'Welke klus moeten we bekijken, en ongeveer hoeveel uur per week gaat erin?'],
   fSend: ['Book the audit', 'Boek de audit'],
+  fScan: ['Send my scan answers and result along.', 'Stuur mijn scanantwoorden en uitslag mee.'],
   fNote: ['No payment now. We reply within a working day with the price and a date for the intake.', 'Je betaalt nu niets. We antwoorden binnen een werkdag met de prijs en een datum voor de intake.'],
   fSent: ['Booked. You will hear from us within a working day.', 'Geboekt. Je hoort binnen een werkdag van ons.'],
   fFail: ['That did not work. Email us at info@harnashq.com.', 'Dat lukte niet. Mail ons op info@harnashq.com.'],
@@ -75,4 +76,5 @@ export function apply(lang) {
   document.querySelector('meta[name="description"]')?.setAttribute('content', tr('desc', lang));
   document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = tr(el.dataset.t, lang); });
   document.querySelectorAll('[data-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+  document.querySelectorAll('a[data-privacy]').forEach((a) => { a.href = lang === 'nl' ? 'privacy.html' : 'privacy-en.html'; });
 }

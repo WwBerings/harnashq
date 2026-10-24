@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; connect-src 'self' https://formspree.io; form-action 'self' https://formspree.io mailto:; base-uri 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob:; media-src 'self'; connect-src 'self' https://formspree.io; form-action https://formspree.io; base-uri 'none'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>HARNAS · AI consultancy for small business</title>
 <meta name="description" content="We find what saves your business time or money, and build it. Privacy by design. Book the audit or take the free scan.">
@@ -32,8 +32,8 @@
 <header class="screen hero" id="top">
   <div class="copy">
     <h1 data-rise data-t="heroH">AI consultancy for small business.</h1>
-    <p class="lead" data-rise style="--i:1" data-t="heroP">We find what saves your business time or money, and build it. Privacy by design.</p>
-    <div class="actions-row" data-rise style="--i:2">
+    <p class="lead" data-rise data-i="1" data-t="heroP">We find what saves your business time or money, and build it. Privacy by design.</p>
+    <div class="actions-row" data-rise data-i="2">
       <a class="btn btn-blue" href="#audit" data-t="ctaAudit">Book the audit</a>
       <a class="btn btn-ghost" href="#scan" data-t="ctaScan">Free scan</a>
     </div>
@@ -45,8 +45,8 @@
 <section class="screen" id="possible" aria-labelledby="pos-h">
   <div class="copy">
     <h2 id="pos-h" data-reveal data-t="posH">You know AI can help.</h2>
-    <p class="lead-blue" data-reveal style="--i:1" data-t="posH2">You don’t need to know how.</p>
-    <ul class="pairs" data-reveal style="--i:2">
+    <p class="lead-blue" data-reveal data-i="1" data-t="posH2">You don’t need to know how.</p>
+    <ul class="pairs" data-reveal data-i="2">
       <li><span data-t="p1q">Monday: copying numbers</span><b data-t="p1a">Runs at night.</b></li>
       <li><span data-t="p2q">The same five questions</span><b data-t="p2a">Drafted. You send.</b></li>
       <li><span data-t="p3q">Chasing documents</span><b data-t="p3a">Asked for you.</b></li>
@@ -60,14 +60,14 @@
 <section class="screen" id="how" aria-labelledby="how-h">
   <div class="copy">
     <h2 id="how-h" data-reveal data-t="howH">How we work</h2>
-    <ol class="steps" data-reveal style="--i:1">
+    <ol class="steps" data-reveal data-i="1">
       <li><b data-t="w1">Audit</b><span data-t="w1p">Two weeks. One process. A two-page map.</span></li>
       <li><b data-t="w2">Proposal</b><span data-t="w2p">One fixed price, before we start.</span></li>
       <li><b data-t="w3">Build</b><span data-t="w3p">Inside the tools you already have.</span></li>
       <li><b data-t="w4">Maintain</b><span data-t="w4p">Optional, per month.</span></li>
     </ol>
-    <p class="privacy-line" data-reveal style="--i:2"><b data-t="privH">Privacy by design.</b> <span data-t="privP">Built to the rules that apply to your data.</span></p>
-    <ul class="marks" data-reveal style="--i:3" aria-label="Rules we build to">
+    <p class="privacy-line" data-reveal data-i="2"><b data-t="privH">Privacy by design.</b> <span data-t="privP">Built to the rules that apply to your data.</span></p>
+    <ul class="marks" data-reveal data-i="3" aria-label="Rules we build to">
       <li data-t="m1">GDPR</li><li data-t="m2">EU AI Act</li><li data-t="m3">NOvA guidance</li><li data-t="m4">Rules of conduct</li>
     </ul>
   </div>
@@ -111,14 +111,15 @@
 <section class="screen" id="audit" aria-labelledby="audit-h">
   <div class="copy">
     <h2 id="audit-h" data-reveal data-t="auditH">The audit</h2>
-    <p data-reveal style="--i:1" data-t="auditP"></p>
-    <p class="keep" data-reveal style="--i:2" data-t="auditKeep">Even if you never build, you keep the map.</p>
-    <form class="form" id="audit-form" method="post" action="https://formspree.io/f/xvkkonpn" data-reveal style="--i:3">
+    <p data-reveal data-i="1" data-t="auditP"></p>
+    <p class="keep" data-reveal data-i="2" data-t="auditKeep">Even if you never build, you keep the map.</p>
+    <form class="form" id="audit-form" method="post" action="https://formspree.io/f/xvkkonpn" data-reveal data-i="3">
       <label><span data-t="fEmail">Your email</span><input type="email" name="email" required autocomplete="email"></label>
       <label><span data-t="fQ">Which job should we look at, and roughly how many hours a week go into it?</span><input type="text" name="job" id="f-job" required maxlength="200"></label>
       <input type="hidden" name="_subject" value="HARNAS audit">
       <input type="hidden" name="language" id="f-lang">
       <textarea name="scan" id="f-answers" hidden></textarea>
+      <label class="form-scan" id="f-scan-wrap" hidden><input type="checkbox" id="f-scan" checked><span data-t="fScan">Send my scan answers and result along.</span></label>
       <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="sr-only" aria-hidden="true">
       <button class="btn btn-blue" type="submit" data-t="fSend">Book the audit</button>
       <p class="form-msg" id="form-msg" aria-live="polite" data-t="fNote"></p>
@@ -132,12 +133,12 @@
   <div class="copy">
     <p class="foot-h" data-t="footH">Book the audit.</p>
     <div class="actions-row"><a class="btn btn-blue" href="#audit" data-t="ctaAudit">Book the audit</a><a class="btn btn-ghost" href="#scan" data-t="ctaScan">Free scan</a></div>
-    <p class="legal"><a class="link" href="privacy.html" data-t="privacyLink">Privacy statement</a> · <span data-t="legal">No cookies, no trackers</span> · © 2026 HARNAS</p>
+    <p class="legal"><a class="link" href="privacy-en.html" data-privacy data-t="privacyLink">Privacy statement</a> · <span data-t="legal">No cookies, no trackers</span> · © 2026 HARNAS</p>
     <p class="foot-sign"><svg viewBox="0 0 100 108" aria-hidden="true"><use href="#mark"/></svg>HARNAS</p>
   </div>
 </footer>
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<svg width="0" height="0" class="defs" aria-hidden="true">
   <symbol id="mark" viewBox="0 0 100 108"><g fill="currentColor">
     <path d="M48.5 25 L36 7 L11 12.5 Q22 23 19.5 34 L24.5 63 L48.5 71 Z"/>
     <path d="M51.5 25 L64 7 L89 12.5 Q78 23 80.5 34 L75.5 63 L51.5 71 Z"/>

@@ -169,3 +169,11 @@ legend { font-size: var(--step-lead); font-weight: 700; letter-spacing: -0.02em;
 
 /* ---------------- print ---------------- */
 @media print { #emblem, .bar, .foot { display: none !important; } body { background: #fff; color: #000; } }
+
+/* stagger order without inline styles (CSP: style-src 'self') */
+[data-i="1"] { --i: 1; } [data-i="2"] { --i: 2; } [data-i="3"] { --i: 3; }
+.defs { position: absolute; }
+.form-scan { display: flex; gap: 10px; align-items: baseline; font-size: var(--step-small); color: var(--steel); font-weight: 400; }
+.form-scan input { width: 1rem; height: 1rem; margin: 0; accent-color: var(--blue); }
+.doc .link { color: var(--white); }
+.doc .small { font-size: var(--step-small); color: var(--steel-soft); }

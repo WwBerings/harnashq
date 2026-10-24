@@ -85,6 +85,7 @@ function render() {
   $('verify-wrap').hidden = r.verifieer.length === 0; fill('verify', r.verifieer);
   $('f-job').value = r.auditVraag;
   $('f-answers').value = submissionText(answers, { lang }) + '\n\n---- result ----\n' + reportText(answers, lang);
+  $('f-scan-wrap').hidden = false;
   back.disabled = false; back.textContent = tr('again', lang);
   go.disabled = false; go.textContent = tr('ctaAudit', lang);
 }
@@ -99,7 +100,7 @@ go.addEventListener('click', () => {
 back.addEventListener('click', () => {
   if (i === QUESTIONS.length) {
     for (const k in answers) delete answers[k];
-    $('f-answers').value = ''; $('f-job').value = '';
+    clearScan(); $('f-job').value = '';
     tabs.r.disabled = true;
     i = 0; showTab('q'); renderQuestion(true); return;
   }
@@ -107,6 +108,8 @@ back.addEventListener('click', () => {
 });
 
 // ---------------- audit form: goes to the HARNAS mailbox ----------------
+// The scan travels with the booking only while the visitor can see that it does, and leaves the form once sent.
+function clearScan() { $('f-answers').value = ''; $('f-scan-wrap').hidden = true; $('f-scan').checked = true; }
 const form = $('audit-form');
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -114,9 +117,11 @@ form.addEventListener('submit', async (e) => {
   const btn = form.querySelector('[type=submit]'); btn.disabled = true;
   $('f-lang').value = lang;
   try {
-    const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+    const data = new FormData(form);
+    if (!$('f-scan').checked || $('f-scan-wrap').hidden) data.delete('scan');
+    const res = await fetch(form.action, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
     if (!res.ok) throw new Error(String(res.status));
-    msg.textContent = tr('fSent', lang); form.email.value = ''; form.job.value = '';
+    msg.textContent = tr('fSent', lang); form.email.value = ''; form.job.value = ''; clearScan();
   } catch { msg.textContent = tr('fFail', lang); }
   btn.disabled = false;
 });
